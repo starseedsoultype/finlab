@@ -54,7 +54,7 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 80px 24px 60px;
+      padding: 100px 24px 80px;
       position: relative;
       overflow: hidden;
     }
@@ -64,23 +64,30 @@
       position: absolute;
       top: -200px; left: 50%;
       transform: translateX(-50%);
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(42,158,143,0.12) 0%, transparent 70%);
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(42,158,143,0.10) 0%, transparent 70%);
       pointer-events: none;
     }
 
-    .hero-label {
-      font-size: 11px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--teal);
-      margin-bottom: 32px;
+    .hero-intro {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(18px, 3.5vw, 26px);
+      font-weight: 300;
+      color: #9A9690;
+      line-height: 2;
+      max-width: 560px;
+      margin-bottom: 56px;
+    }
+
+    .hero-intro em {
+      font-style: normal;
+      color: var(--text);
     }
 
     .hero h1 {
-      font-size: clamp(52px, 12vw, 96px);
-      letter-spacing: -1px;
-      margin-bottom: 24px;
+      font-size: clamp(64px, 14vw, 112px);
+      letter-spacing: -2px;
+      margin-bottom: 20px;
       background: linear-gradient(135deg, var(--text) 40%, var(--teal-light));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -88,16 +95,16 @@
     }
 
     .hero-subtitle {
-      font-size: clamp(18px, 4vw, 24px);
+      font-size: clamp(16px, 3vw, 20px);
       font-family: 'Cormorant Garamond', serif;
       color: var(--text-muted);
-      max-width: 520px;
+      max-width: 480px;
       margin-bottom: 16px;
     }
 
     .hero-dates {
-      font-size: 13px;
-      letter-spacing: 2px;
+      font-size: 12px;
+      letter-spacing: 2.5px;
       text-transform: uppercase;
       color: var(--gold);
       margin-bottom: 48px;
@@ -337,46 +344,102 @@
       font-size: 14px;
     }
 
-    /* ─── REVIEWS ─── */
+    /* ─── REVIEWS CAROUSEL ─── */
     .reviews {
       background: var(--bg2);
     }
 
-    .reviews-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2px;
+    .carousel-wrap {
+      position: relative;
       margin-top: 40px;
+      overflow: hidden;
+    }
+
+    .carousel-track {
+      display: flex;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .review-card {
       background: var(--bg3);
-      padding: 28px 24px;
+      padding: 40px 36px;
+      min-width: 100%;
+      flex-shrink: 0;
     }
 
     .review-text {
-      font-size: 15px;
-      color: #C0BDB5;
-      line-height: 1.8;
-      margin-bottom: 20px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(20px, 3vw, 26px);
+      color: #D0CCC4;
+      line-height: 1.7;
+      margin-bottom: 28px;
       font-style: italic;
+      position: relative;
+      padding-top: 20px;
     }
 
     .review-text::before {
       content: '"';
       font-family: 'Cormorant Garamond', serif;
-      font-size: 32px;
+      font-size: 80px;
       color: var(--teal);
-      opacity: 0.5;
-      display: block;
+      opacity: 0.25;
+      position: absolute;
+      top: -20px;
+      left: -8px;
       line-height: 1;
-      margin-bottom: 8px;
     }
 
     .review-author {
       font-size: 13px;
+      color: var(--teal);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .carousel-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 32px;
+    }
+
+    .carousel-btn {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.12);
       color: var(--text-muted);
-      letter-spacing: 1px;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .carousel-btn:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+    }
+
+    .carousel-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .carousel-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .carousel-dot.active {
+      background: var(--teal);
+      transform: scale(1.3);
     }
 
     /* ─── PRICING ─── */
@@ -607,9 +670,27 @@
 
 <!-- ═══════════ HERO ═══════════ -->
 <section class="hero">
-  <p class="hero-label">Живая онлайн-лаборатория</p>
+  <div class="hero-intro">
+    Я люблю большие.<br>
+    <br>
+    Маленькие тоже радуют.<br>
+    С ними проще, спокойнее, привычнее.<br>
+    <br>
+    <em>Большие заставляют сердце биться быстрее.</em><br>
+    <br>
+    Вокруг них рождаются планы, мечты, надежды<br>
+    и целые альтернативные версии будущего.<br>
+    <br>
+    Иногда они приходят.<br>
+    Иногда остаются красивой фантазией на долгие годы.<br>
+    <br>
+    Интересно наблюдать за тем, сколько всего происходит<br>
+    между человеком и тем, что он хочет получить.<br>
+    <br>
+    <em>Особенно когда речь идёт о деньгах.</em>
+  </div>
   <h1>ФИНЛАБ</h1>
-  <p class="hero-subtitle">7 дней исследования финансовой цели через МАК-карты</p>
+  <p class="hero-subtitle">7 дней исследования финансовой цели через МАК&#8209;карты</p>
   <p class="hero-dates">15 — 21 июня 2025 · ежедневно в 10:00 МСК</p>
   <a href="https://t.me/finlab_bot" class="btn-primary">Начать бесплатно →</a>
   <p class="hero-note">Войди в бот и посмотри бесплатную практику</p>
@@ -758,31 +839,38 @@
   <div class="container">
     <p class="section-label">Отзывы</p>
     <h2>Что говорят участники</h2>
-    <div class="reviews-grid">
-      <div class="review-card">
-        <p class="review-text">Олеся очень точно попадает в суть. Я думала, что знаю свою проблему с деньгами. Оказалось — совсем не то. Карты показали что-то, что я давно не хотела видеть.</p>
-        <p class="review-author">— Katya.travell</p>
+    <div class="carousel-wrap">
+      <div class="carousel-track" id="reviewTrack">
+        <div class="review-card">
+          <p class="review-text">Олеся очень точно попадает в суть. Я думала, что знаю свою проблему с деньгами. Оказалось — совсем не то. Карты показали что-то, что я давно не хотела видеть.</p>
+          <p class="review-author">— Katya.travell</p>
+        </div>
+        <div class="review-card">
+          <p class="review-text">Первый раз работала с МАК-картами и была скептиком. После первого эфира — всё. Это работает. И работает быстро.</p>
+          <p class="review-author">— Арина</p>
+        </div>
+        <div class="review-card">
+          <p class="review-text">Мне понравилось, что это не про «визуализируй богатство». Это про честную работу с собой. Олеся держит пространство очень бережно.</p>
+          <p class="review-author">— участница курса</p>
+        </div>
+        <div class="review-card">
+          <p class="review-text">После этой работы я наконец написала ценник на свои услуги. Просто написала. Без тревоги. Это само по себе было чудо.</p>
+          <p class="review-author">— Vilena Sense</p>
+        </div>
+        <div class="review-card">
+          <p class="review-text">Глубоко, точно, безопасно. Олеся создаёт атмосферу, в которой можно быть честной с собой. Рекомендую всем, кто застрял в теме денег.</p>
+          <p class="review-author">— участница курса</p>
+        </div>
+        <div class="review-card">
+          <p class="review-text">Я приходила с вопросом «почему я не могу заработать больше». Ушла с пониманием «чего я на самом деле хочу». Это разные вопросы. И оба важные.</p>
+          <p class="review-author">— участница курса</p>
+        </div>
       </div>
-      <div class="review-card">
-        <p class="review-text">Первый раз работала с МАК-картами и была скептиком. После первого эфира — всё. Это работает. И работает быстро.</p>
-        <p class="review-author">— Арина</p>
-      </div>
-      <div class="review-card">
-        <p class="review-text">Мне понравилось, что это не про «визуализируй богатство». Это про честную работу с собой. Олеся держит пространство очень бережно.</p>
-        <p class="review-author">— участница курса</p>
-      </div>
-      <div class="review-card">
-        <p class="review-text">После этой работы я наконец написала ценник на свои услуги. Просто написала. Без тревоги. Это само по себе было чудо.</p>
-        <p class="review-author">— Vilena Sense</p>
-      </div>
-      <div class="review-card">
-        <p class="review-text">Глубоко, точно, безопасно. Олеся создаёт атмосферу, в которой можно быть честной с собой. Рекомендую всем, кто застрял в теме денег.</p>
-        <p class="review-author">— участница курса</p>
-      </div>
-      <div class="review-card">
-        <p class="review-text">Я приходила с вопросом «почему я не могу заработать больше». Ушла с пониманием «чего я на самом деле хочу». Это разные вопросы. И оба важные.</p>
-        <p class="review-author">— участница курса</p>
-      </div>
+    </div>
+    <div class="carousel-controls">
+      <button class="carousel-btn" id="reviewPrev">&#8592;</button>
+      <div class="carousel-dots" id="reviewDots"></div>
+      <button class="carousel-btn" id="reviewNext">&#8594;</button>
     </div>
   </div>
 </section>
@@ -881,5 +969,42 @@
   <p style="margin-top:8px; font-size:12px;">Курс носит образовательный характер и не является медицинской или психотерапевтической услугой.</p>
 </footer>
 
+<script>
+  // ─── CAROUSEL ───
+  const track = document.getElementById('reviewTrack');
+  const cards = track.querySelectorAll('.review-card');
+  const dotsWrap = document.getElementById('reviewDots');
+  let current = 0;
+  const total = cards.length;
+
+  // build dots
+  cards.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => goTo(i));
+    dotsWrap.appendChild(d);
+  });
+
+  function goTo(n) {
+    current = (n + total) % total;
+    track.style.transform = `translateX(-${current * 100}%)`;
+    dotsWrap.querySelectorAll('.carousel-dot').forEach((d, i) =>
+      d.classList.toggle('active', i === current));
+  }
+
+  document.getElementById('reviewPrev').addEventListener('click', () => goTo(current - 1));
+  document.getElementById('reviewNext').addEventListener('click', () => goTo(current + 1));
+
+  // auto-advance every 5s
+  setInterval(() => goTo(current + 1), 5000);
+
+  // swipe support
+  let startX = 0;
+  track.addEventListener('touchstart', e => startX = e.touches[0].clientX, {passive: true});
+  track.addEventListener('touchend', e => {
+    const diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) goTo(diff > 0 ? current + 1 : current - 1);
+  });
+</script>
 </body>
 </html>
