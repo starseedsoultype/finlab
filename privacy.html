@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Политика конфиденциальности — ФИНЛАБ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0D0F14; color: #E8E4DC; font-family: 'Inter', sans-serif; font-weight: 300; line-height: 1.8; font-size: 16px; }
+    .container { max-width: 720px; margin: 0 auto; padding: 60px 24px 80px; }
+    .back { display: inline-block; color: #2A9E8F; text-decoration: none; font-size: 13px; margin-bottom: 48px; }
+    .back:hover { text-decoration: underline; }
+    h1 { font-family: 'Cormorant Garamond', serif; font-size: 40px; margin-bottom: 8px; }
+    .meta { font-size: 13px; color: #8A8880; margin-bottom: 48px; }
+    h2 { font-family: 'Cormorant Garamond', serif; font-size: 22px; margin: 40px 0 16px; color: #2A9E8F; }
+    p { margin-bottom: 16px; color: #C0BDB5; }
+    ul { margin: 0 0 16px 20px; color: #C0BDB5; }
+    li { margin-bottom: 8px; }
+    strong { color: #E8E4DC; font-weight: 500; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 14px; }
+    td, th { padding: 10px 14px; border: 1px solid rgba(255,255,255,0.08); color: #C0BDB5; text-align: left; }
+    th { background: #1A1E2A; color: #E8E4DC; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html" class="back">← На главную</a>
+  <h1>Политика конфиденциальности</h1>
+  <p class="meta">ФИНЛАБ · Дата: 9 июня 2025 г.</p>
+
+  <h2>1. Кто обрабатывает данные</h2>
+  <p><strong>Попова Олеся Ринатовна</strong>, самозанятая. Контакт: Telegram <a href="https://t.me/olesyabreeze" style="color:#2A9E8F;">@olesyabreeze</a></p>
+
+  <h2>2. Какие данные собираются</h2>
+  <table>
+    <tr><th>Данные</th><th>Откуда</th><th>Зачем</th></tr>
+    <tr><td>Telegram ID</td><td>Telegram</td><td>Идентификация участника</td></tr>
+    <tr><td>Имя в Telegram</td><td>Telegram</td><td>Обращение, поддержка</td></tr>
+    <tr><td>Ответы на задания</td><td>Бот</td><td>Проверка выполнения, обратная связь</td></tr>
+    <tr><td>Дата и сумма оплаты</td><td>Prodamus / Stripe</td><td>Подтверждение участия</td></tr>
+  </table>
+  <p>Мы <strong>не</strong> собираем: паспортные данные, номер телефона, адрес, геолокацию, данные банковской карты.</p>
+
+  <h2>3. На каком основании</h2>
+  <ul>
+    <li>Исполнение договора (ст. 6(1)(b) GDPR; ст. 6 ФЗ-152) — для обеспечения работы курса</li>
+    <li>Согласие — для отправки напоминаний через 100 дней (можно отозвать, написав боту /unsubscribe)</li>
+  </ul>
+
+  <h2>4. Кому передаются данные</h2>
+  <p><strong>OpenAI</strong> (США) — ответы на задания передаются для автоматической проверки. Данные передаются без имени участника и не используются для обучения моделей (условие API).</p>
+  <p><strong>Supabase</strong> (США) — хранение базы данных участников. Данные защищены шифрованием в покое и при передаче.</p>
+  <p><strong>Prodamus / Stripe</strong> — платёжные данные. Обрабатываются этими сервисами согласно их собственным политикам конфиденциальности.</p>
+  <p>Третьим лицам в маркетинговых целях данные <strong>не передаются</strong>.</p>
+
+  <h2>5. Сколько хранятся данные</h2>
+  <p>Данные об участии в курсе: <strong>1 год</strong> с даты окончания курса. После этого срока данные удаляются из базы по запросу или автоматически.</p>
+  <p>Чтобы запросить удаление своих данных раньше срока — напишите <a href="https://t.me/olesyabreeze" style="color:#2A9E8F;">@olesyabreeze</a> или отправьте боту /delete_my_data</p>
+
+  <h2>6. Ваши права</h2>
+  <ul>
+    <li>Запросить копию своих данных</li>
+    <li>Исправить неточности</li>
+    <li>Потребовать удаления данных</li>
+    <li>Отозвать согласие на рассылки</li>
+  </ul>
+  <p>Для реализации любого из прав — Telegram <a href="https://t.me/olesyabreeze" style="color:#2A9E8F;">@olesyabreeze</a>. Ответ в течение 30 дней.</p>
+
+  <h2>7. Безопасность</h2>
+  <p>Данные хранятся на серверах Supabase с шифрованием. Доступ к базе имеет только бот (сервисный ключ) и автор курса (через защищённый аккаунт).</p>
+
+  <h2>8. Дети</h2>
+  <p>Курс предназначен для лиц старше 18 лет. Если вам нет 18 — не используйте бот.</p>
+
+  <h2>9. Изменения политики</h2>
+  <p>При существенных изменениях — уведомление через бот. Актуальная версия всегда на этой странице.</p>
+</div>
+</body>
+</html>
