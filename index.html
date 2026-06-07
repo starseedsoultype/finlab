@@ -365,8 +365,10 @@
       position: relative;
       overflow: hidden;
       margin-top: 40px;
-      /* показываем края соседних карточек */
-      padding: 0 48px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 0 60px;
     }
 
     .ig-track {
@@ -380,7 +382,7 @@
       background: var(--bg3);
       padding: 36px 32px;
       border-radius: 2px;
-      flex: 0 0 calc(100% - 96px); /* полная ширина минус padding по бокам */
+      flex: 0 0 calc(100% - 120px);
       min-width: 0;
     }
 
@@ -422,8 +424,8 @@
     }
 
     @media (max-width: 640px) {
-      .ig-carousel { padding: 0 24px; }
-      .review-card { flex: 0 0 calc(100% - 48px); padding: 28px 20px; }
+      .ig-carousel { padding: 0 32px; max-width: 100%; }
+      .review-card { flex: 0 0 calc(100% - 64px); padding: 28px 20px; }
     }
 
     /* ─── PRICING ─── */
