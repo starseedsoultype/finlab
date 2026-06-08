@@ -646,35 +646,38 @@
 
     /* ─── TEAM ─── */
     .team-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
     }
 
     .team-card {
       display: grid;
-      grid-template-columns: 140px 1fr;
-      gap: 28px;
-      align-items: start;
+      grid-template-columns: 200px 1fr;
+      gap: 0;
+      align-items: stretch;
       background: var(--bg2);
-      padding: 32px;
+    }
+
+    .team-photo {
+      overflow: hidden;
+      flex-shrink: 0;
     }
 
     .team-photo img {
-      width: 140px;
-      height: 140px;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
       object-position: top center;
-      border-radius: 2px;
-      filter: grayscale(15%);
       display: block;
+      filter: grayscale(15%);
     }
 
     .team-photo .photo-placeholder {
-      width: 140px;
-      height: 140px;
+      width: 100%;
+      height: 100%;
+      min-height: 200px;
       background: var(--bg3);
-      border-radius: 2px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -682,9 +685,16 @@
       color: var(--text-muted);
     }
 
+    .team-info {
+      padding: 36px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
     .team-info h3 {
-      font-size: 22px;
-      margin-bottom: 4px;
+      font-size: 26px;
+      margin-bottom: 6px;
     }
 
     .team-role {
@@ -692,21 +702,23 @@
       letter-spacing: 2px;
       text-transform: uppercase;
       color: var(--teal);
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
 
     .team-bio {
-      font-size: 14px;
+      font-size: 15px;
       color: #B8B4AC;
-      line-height: 1.75;
-      margin-bottom: 14px;
+      line-height: 1.8;
+      margin-bottom: 20px;
+      max-width: 540px;
     }
 
     .team-what {
       font-size: 12px;
       color: var(--text-muted);
       border-top: 1px solid rgba(255,255,255,0.06);
-      padding-top: 12px;
+      padding-top: 14px;
+      letter-spacing: 0.5px;
     }
 
     /* ─── FREE BOT GRID ─── */
@@ -733,9 +745,9 @@
       .hero-intro { font-size: 18px; }
       .freebot-grid { grid-template-columns: 1fr; gap: 32px; }
       .freebot-grid > div:last-child { border-left: none; border-top: 2px solid rgba(42,158,143,0.3); }
-      .team-grid { grid-template-columns: 1fr; }
-      .team-card { grid-template-columns: 100px 1fr; gap: 20px; padding: 24px; }
-      .team-photo img, .team-photo .photo-placeholder { width: 100px; height: 100px; }
+      .team-card { grid-template-columns: 1fr; }
+      .team-photo { max-height: 260px; }
+      .team-info { padding: 24px 20px; }
     }
   </style>
 </head>
@@ -828,39 +840,20 @@
 
 <div class="teal-line"></div>
 
-<!-- ═══════════ TEAM ═══════════ -->
-<section style="background: var(--bg); padding: 80px 0;">
+<!-- ═══════════ KRISTINA ═══════════ -->
+<section class="about">
   <div class="container">
-    <p class="section-label">Команда</p>
-    <h2 style="margin-bottom: 48px;">Кто ведёт курс</h2>
-    <div class="team-grid">
-
-      <!-- Олеся -->
-      <div class="team-card">
-        <div class="team-photo">
-          <img src="image_2026-04-27_110223266.jpg" alt="Олеся Бриз" />
-        </div>
-        <div class="team-info">
-          <h3>Олеся Бриз</h3>
-          <p class="team-role">Психолог, МАК-практик</p>
-          <p class="team-bio">Работаю с людьми на стыке психологии и образного мышления — индивидуально и в группах. Тема денег пришла ко мне через собственный опыт, когда финансовая цель есть, а движения нет.</p>
-          <p class="team-what">7 живых эфиров · МАК-карты · задания для рефлексии</p>
-        </div>
+    <div class="about-inner">
+      <div class="about-text">
+        <p class="section-label">Телесная практика</p>
+        <h2 style="font-size: clamp(28px,5vw,44px); margin-bottom: 28px;">Кристина Кирис</h2>
+        <p>Телесный терапевт и преподаватель. Работаю с людьми через ощущения в теле — помогаю познавать себя и свои возможности через биомеханику и движение.</p>
+        <p>В здоровом теле — здоровый дух.</p>
+        <p style="margin-top: 8px; color: #B8B4AC;">Каждое утро курса — зарядка и медитация-расслабление с позитивными аффирмациями (~45 минут). Плюс ежедневные практики простукивания (EFT) для формирования нейронных связей изобильного мышления.</p>
       </div>
-
-      <!-- Кристина -->
-      <div class="team-card">
-        <div class="team-photo">
-          <img src="kristina.jpg" alt="Кристина Кирис" onerror="this.parentElement.innerHTML='<div class=\'photo-placeholder\'>фото</div>'" />
-        </div>
-        <div class="team-info">
-          <h3>Кристина Кирис</h3>
-          <p class="team-role">Телесный терапевт, преподаватель</p>
-          <p class="team-bio">Работаю с людьми через ощущения в теле. Помогаю познавать себя и свои возможности через биомеханику и движение. В здоровом теле — здоровый дух.</p>
-          <p class="team-what">7 утренних зарядок · 7 практик эмоциональной свободы</p>
-        </div>
+      <div class="about-photo">
+        <img src="kristina.jpg" alt="Кристина Кирис" />
       </div>
-
     </div>
   </div>
 </section>
