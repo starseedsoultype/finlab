@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ФИНЛАБ — Материалы курса</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:       #0D0F14;
+      --bg2:      #141720;
+      --card:     #1A1E2A;
+      --teal:     #2A9E8F;
+      --teal-lt:  #3BBFAE;
+      --pink:     #E05B78;
+      --gold:     #C9A96E;
+      --text:     #E8E4DC;
+      --muted:    #8A8880;
+      --border:   #2A2E3A;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Manrope', sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    h1, h2, h3 { font-family: 'Jost', sans-serif; font-weight: 500; }
+
+    /* ── Loader ── */
+    #loader {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      gap: 16px;
+      color: var(--muted);
+    }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid var(--border);
+      border-top-color: var(--teal);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Access denied ── */
+    #denied {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      gap: 16px;
+      padding: 32px;
+      text-align: center;
+    }
+    #denied h2 { color: var(--pink); font-size: 22px; }
+    #denied p  { color: var(--muted); max-width: 360px; }
+    #denied a  { color: var(--teal); }
+
+    /* ── Main content ── */
+    #content { display: none; }
+
+    header {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    header h1 { font-size: 20px; letter-spacing: 0.05em; }
+    header .badge {
+      background: var(--teal);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.04em;
+    }
+
+    main { max-width: 720px; margin: 0 auto; padding: 32px 20px 64px; }
+
+    /* ── Day card ── */
+    .day-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .day-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+      gap: 12px;
+    }
+    .day-header:hover { background: rgba(255,255,255,0.03); }
+    .day-num {
+      font-family: 'Jost', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .day-title {
+      flex: 1;
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .day-arrow {
+      color: var(--muted);
+      font-size: 18px;
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+    .day-card.open .day-arrow { transform: rotate(180deg); }
+
+    .day-body {
+      display: none;
+      padding: 0 20px 20px;
+      border-top: 1px solid var(--border);
+    }
+    .day-card.open .day-body { display: block; }
+
+    .day-body .section { margin-top: 16px; }
+    .day-body .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .day-body .section-content { color: var(--text); font-size: 14px; }
+
+    .link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--teal);
+      color: #fff;
+      text-decoration: none;
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    .link-btn:hover { background: var(--teal-lt); }
+    .link-btn.secondary {
+      background: transparent;
+      border: 1px solid var(--teal);
+      color: var(--teal);
+    }
+    .link-btn.secondary:hover { background: rgba(42,158,143,0.1); }
+
+    .locked {
+      color: var(--muted);
+      font-size: 13px;
+      font-style: italic;
+    }
+
+    /* ── Status bar ── */
+    .status-bar {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .status-bar .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--teal);
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Loader -->
+<div id="loader">
+  <div class="spinner"></div>
+  <span>Проверяем доступ...</span>
+</div>
+
+<!-- Access denied -->
+<div id="denied">
+  <h2>Доступ закрыт</h2>
+  <p id="denied-reason">Эта страница доступна только активным участницам курса.</p>
+  <p>Есть вопросы? Напиши <a href="https://t.me/olesyabreeze">@olesyabreeze</a></p>
+</div>
+
+<!-- Content -->
+<div id="content">
+  <header>
+    <h1>ФИНЛАБ</h1>
+    <span class="badge">Материалы курса</span>
+  </header>
+  <main>
+    <div class="status-bar">
+      <div class="dot"></div>
+      <span id="status-text">Загрузка...</span>
+    </div>
+    <div id="days-list"></div>
+  </main>
+</div>
+
+<script>
+const ADMIN_URL = "https://ogqtywdsplyqwfznqxnu.supabase.co/functions/v1/finlab-admin";
+
+const DAY_TOPICS = {
+  1: "Диагностика и цель",
+  2: "Причины и скрытые выгоды",
+  3: "Страхи",
+  4: "Жертва — что отпустить",
+  5: "Ресурсы",
+  6: "Конкретный шаг",
+  7: "Образ будущего себя",
+};
+
+// Получаем telegram_id из URL
+const params = new URLSearchParams(location.search);
+const tgId = params.get("id");
+
+if (!tgId || !/^\d+$/.test(tgId)) {
+  showDenied("Ссылка недействительна. Получи её в боте @finlabo_bot");
+} else {
+  loadContent(tgId);
+}
+
+async function loadContent(telegram_id) {
+  try {
+    const res = await fetch(ADMIN_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "get_member_content", telegram_id }),
+    });
+    const data = await res.json();
+
+    if (!data.access) {
+      const reasons = {
+        not_found: "Участница не найдена. Проверь ссылку в боте.",
+        dropped: "Твой доступ закрыт — время на домашнее задание истекло.\nЕсть вопросы? Напиши @olesyabreeze",
+        pending: "Оплата ещё не подтверждена. Если ты оплатила — напиши @olesyabreeze",
+      };
+      showDenied(reasons[data.reason] || "Доступ закрыт.");
+      return;
+    }
+
+    showContent(data);
+  } catch (e) {
+    showDenied("Ошибка загрузки. Попробуй обновить страницу.");
+  }
+}
+
+function showDenied(msg) {
+  document.getElementById("loader").style.display = "none";
+  const el = document.getElementById("denied");
+  el.style.display = "flex";
+  if (msg) document.getElementById("denied-reason").textContent = msg;
+}
+
+function showContent(data) {
+  document.getElementById("loader").style.display = "none";
+  document.getElementById("content").style.display = "block";
+
+  const courseDay = data.course_day || 0;
+  const myDay = data.current_day || 1;
+
+  document.getElementById("status-text").textContent =
+    courseDay > 0
+      ? `Идёт день ${courseDay} из 7 · Твой прогресс: день ${myDay}`
+      : `Курс начнётся 15 июня · Ты в списке участниц`;
+
+  const list = document.getElementById("days-list");
+  list.innerHTML = "";
+
+  for (const d of data.days) {
+    const isUnlocked = d.day <= courseDay;
+    const card = buildDayCard(d, isUnlocked);
+    list.appendChild(card);
+    // Открываем текущий день
+    if (d.day === courseDay) card.classList.add("open");
+  }
+}
+
+function buildDayCard(d, isUnlocked) {
+  const card = document.createElement("div");
+  card.className = "day-card";
+
+  const header = document.createElement("div");
+  header.className = "day-header";
+  header.innerHTML = `
+    <span class="day-num">День ${d.day}</span>
+    <span class="day-title">${DAY_TOPICS[d.day] || ""}</span>
+    <span class="day-arrow">⌄</span>
+  `;
+  header.onclick = () => card.classList.toggle("open");
+
+  const body = document.createElement("div");
+  body.className = "day-body";
+
+  if (!isUnlocked) {
+    body.innerHTML = `<div class="section"><p class="locked">Откроется по расписанию курса.</p></div>`;
+  } else {
+    let html = "";
+
+    // Ссылка на эфир
+    if (d.webinar) {
+      html += `
+        <div class="section">
+          <div class="section-label">Эфир</div>
+          <div class="section-content">
+            <a class="link-btn" href="${d.webinar}" target="_blank">▶ Смотреть эфир</a>
+          </div>
+        </div>`;
+    }
+
+    // Запись
+    if (d.recording) {
+      html += `
+        <div class="section">
+          <div class="section-label">Запись</div>
+          <div class="section-content">
+            <a class="link-btn secondary" href="${d.recording}" target="_blank">📹 Смотреть запись</a>
+          </div>
+        </div>`;
+    }
+
+    // Задание
+    if (d.question) {
+      html += `
+        <div class="section">
+          <div class="section-label">Задание</div>
+          <div class="section-content">${d.question.replace(/\n/g, "<br>")}</div>
+        </div>`;
+    }
+
+    if (!html) html = `<div class="section"><p class="locked">Материалы появятся после эфира.</p></div>`;
+    body.innerHTML = html;
+  }
+
+  card.appendChild(header);
+  card.appendChild(body);
+  return card;
+}
+</script>
+</body>
+</html>
