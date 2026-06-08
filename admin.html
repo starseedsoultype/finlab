@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ФИНЛАБ — Админка</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Manrope:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0D0F14;
+      --bg2:      #141720;
+      --card:     #1A1E2A;
+      --teal:     #2A9E8F;
+      --teal2:    #3BBFAE;
+      --pink:     #E05B78;
+      --gold:     #C9A96E;
+      --text:     #E8E4DC;
+      --muted:    #8A8880;
+      --border:   #252A38;
+      --green:    #4CAF7D;
+      --red:      #E05B78;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Manrope', sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    h1, h2, h3, .label { font-family: 'Jost', sans-serif; }
+
+    /* ── LOGIN ── */
+    #login-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .login-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+    }
+
+    .login-box h1 {
+      font-size: 22px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: var(--teal2);
+      margin-bottom: 6px;
+    }
+
+    .login-box p {
+      color: var(--muted);
+      margin-bottom: 32px;
+      font-size: 13px;
+    }
+
+    .login-box input {
+      width: 100%;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Manrope', sans-serif;
+      font-size: 14px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .login-box input:focus { border-color: var(--teal); }
+
+    .login-box button {
+      width: 100%;
+      background: var(--teal);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      font-family: 'Jost', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      padding: 12px;
+      transition: background 0.2s;
+    }
+
+    .login-box button:hover { background: var(--teal2); }
+
+    .login-error {
+      color: var(--red);
+      font-size: 12px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    /* ── APP ── */
+    #app { display: none; }
+
+    header {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header h1 {
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: var(--teal2);
+    }
+
+    header .logout {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--muted);
+      cursor: pointer;
+      font-family: 'Manrope', sans-serif;
+      font-size: 12px;
+      padding: 5px 12px;
+      transition: all 0.2s;
+    }
+
+    header .logout:hover { border-color: var(--muted); color: var(--text); }
+
+    main { padding: 24px; max-width: 1100px; margin: 0 auto; }
+
+    /* ── STATS ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+    }
+
+    .stat-card .num {
+      font-family: 'Jost', sans-serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--teal2);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-card .lbl {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* ── DAY TABS ── */
+    .day-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .day-tab {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--muted);
+      cursor: pointer;
+      font-family: 'Jost', sans-serif;
+      font-size: 13px;
+      padding: 7px 16px;
+      transition: all 0.2s;
+    }
+
+    .day-tab:hover { border-color: var(--teal); color: var(--text); }
+    .day-tab.active { background: var(--teal); border-color: var(--teal); color: #fff; }
+
+    /* ── PANELS ── */
+    .panels {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 700px) { .panels { grid-template-columns: 1fr; } }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .panel h3 {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .panel input,
+    .panel textarea {
+      width: 100%;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Manrope', sans-serif;
+      font-size: 13px;
+      padding: 10px 14px;
+      outline: none;
+      resize: vertical;
+      transition: border-color 0.2s;
+    }
+
+    .panel textarea { min-height: 80px; }
+    .panel input:focus, .panel textarea:focus { border-color: var(--teal); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--teal);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      font-family: 'Jost', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      padding: 9px 18px;
+      margin-top: 10px;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn:hover { background: var(--teal2); }
+    .btn:disabled { background: var(--border); color: var(--muted); cursor: default; }
+
+    .btn.danger { background: #3a1520; border: 1px solid var(--red); color: var(--red); }
+    .btn.danger:hover { background: var(--red); color: #fff; }
+
+    .btn.broadcast {
+      width: 100%;
+      justify-content: center;
+      background: #1a2a1a;
+      border: 1px solid var(--green);
+      color: var(--green);
+      font-size: 14px;
+      padding: 12px;
+      margin-top: 0;
+    }
+
+    .btn.broadcast:hover { background: var(--green); color: #fff; }
+
+    .save-status {
+      display: inline-block;
+      font-size: 11px;
+      margin-left: 8px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .save-status.show { opacity: 1; }
+    .save-status.ok { color: var(--green); }
+    .save-status.err { color: var(--red); }
+
+    /* ── BROADCAST ── */
+    .broadcast-panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .broadcast-panel h3 {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .broadcast-info {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 14px;
+    }
+
+    /* ── PARTICIPANTS TABLE ── */
+    .table-wrap {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .table-header {
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .table-header h3 {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .table-header input {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: 'Manrope', sans-serif;
+      font-size: 12px;
+      padding: 6px 12px;
+      outline: none;
+      width: 200px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+      font-family: 'Jost', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      padding: 10px 16px;
+      text-align: left;
+      text-transform: uppercase;
+    }
+
+    td {
+      border-bottom: 1px solid var(--border);
+      padding: 11px 16px;
+      font-size: 13px;
+      vertical-align: middle;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(42, 158, 143, 0.04); }
+
+    .badge {
+      display: inline-block;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 2px 8px;
+    }
+
+    .badge.active    { background: rgba(76,175,125,0.15); color: var(--green); }
+    .badge.pending   { background: rgba(201,169,110,0.15); color: var(--gold); }
+    .badge.dropped   { background: rgba(224,91,120,0.15); color: var(--red); }
+    .badge.completed { background: rgba(59,191,174,0.15); color: var(--teal2); }
+
+    .activate-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 11px;
+      padding: 3px 9px;
+      transition: all 0.2s;
+    }
+
+    .activate-btn:hover { border-color: var(--teal); color: var(--teal); }
+
+    /* ── MANUAL ACTIVATE ── */
+    .manual-panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .manual-panel h3 {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .manual-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .manual-row input {
+      flex: 1;
+      min-width: 180px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Manrope', sans-serif;
+      font-size: 13px;
+      padding: 10px 14px;
+      outline: none;
+    }
+
+    .manual-row input:focus { border-color: var(--teal); }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 13px;
+      padding: 12px 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s;
+      z-index: 100;
+      pointer-events: none;
+      max-width: 300px;
+    }
+
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.success { border-color: var(--green); }
+    .toast.error { border-color: var(--red); }
+
+    .loading { color: var(--muted); font-size: 13px; padding: 20px; text-align: center; }
+    .empty   { color: var(--muted); font-size: 13px; padding: 20px; text-align: center; }
+  </style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div id="login-screen">
+  <div class="login-box">
+    <h1>ФИНЛАБ</h1>
+    <p>Панель управления курсом</p>
+    <input type="password" id="pwd-input" placeholder="Пароль" autocomplete="current-password" />
+    <button id="login-btn">Войти</button>
+    <div class="login-error" id="login-error">Неверный пароль</div>
+  </div>
+</div>
+
+<!-- ── APP ── -->
+<div id="app">
+  <header>
+    <h1>ФИНЛАБ — Панель управления</h1>
+    <button class="logout" id="logout-btn">Выйти</button>
+  </header>
+
+  <main>
+
+    <!-- Stats -->
+    <div class="stats-grid" id="stats-grid">
+      <div class="stat-card"><div class="num" id="s-total">—</div><div class="lbl">Всего участниц</div></div>
+      <div class="stat-card"><div class="num" id="s-active">—</div><div class="lbl">Активных</div></div>
+      <div class="stat-card"><div class="num" id="s-completed">—</div><div class="lbl">Завершили курс</div></div>
+      <div class="stat-card"><div class="num" id="s-dropped">—</div><div class="lbl">Выбыли</div></div>
+      <div class="stat-card"><div class="num" id="s-pending">—</div><div class="lbl">Ожидают оплаты</div></div>
+    </div>
+
+    <!-- Day tabs -->
+    <div class="day-tabs" id="day-tabs"></div>
+
+    <!-- Settings panels -->
+    <div class="panels">
+      <div class="panel">
+        <h3>Ссылка на эфир</h3>
+        <input type="url" id="webinar-input" placeholder="https://..." />
+        <button class="btn" id="save-webinar-btn">Сохранить<span class="save-status" id="webinar-status"></span></button>
+      </div>
+      <div class="panel">
+        <h3>Вопрос дня (задание)</h3>
+        <textarea id="question-input" placeholder="Текст вопроса для домашнего задания..."></textarea>
+        <button class="btn" id="save-question-btn">Сохранить<span class="save-status" id="question-status"></span></button>
+      </div>
+    </div>
+
+    <!-- Broadcast -->
+    <div class="broadcast-panel">
+      <h3>Рассылка домашнего задания</h3>
+      <p class="broadcast-info" id="broadcast-info">Все активные участницы, у которых текущий день = выбранному, получат вопрос дня в бот.</p>
+      <button class="btn broadcast" id="broadcast-btn">Разослать ДЗ дня <span id="broadcast-day-num">1</span></button>
+    </div>
+
+    <!-- Manual activate -->
+    <div class="manual-panel">
+      <h3>Активировать участницу вручную</h3>
+      <div class="manual-row">
+        <input type="text" id="activate-input" placeholder="Telegram ID или @username" />
+        <button class="btn" id="activate-btn">Активировать</button>
+      </div>
+    </div>
+
+    <!-- Participants table -->
+    <div class="table-wrap">
+      <div class="table-header">
+        <h3>Участницы</h3>
+        <input type="text" id="search-input" placeholder="Поиск по username..." />
+      </div>
+      <div id="table-body">
+        <div class="loading">Загрузка...</div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+  const API = 'https://ogqtywdsplyqwfznqxnu.supabase.co/functions/v1/finlab-admin';
+  let token = '';
+  let currentDay = 1;
+  let allParticipants = [];
+
+  // ── Auth ──────────────────────────────────────────────────────────────────
+
+  function getToken() { return sessionStorage.getItem('finlab_admin_token') || ''; }
+  function setToken(t) { sessionStorage.setItem('finlab_admin_token', t); token = t; }
+  function clearToken() { sessionStorage.removeItem('finlab_admin_token'); token = ''; }
+
+  async function apiCall(action, body = {}) {
+    const res = await fetch(API, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ action, ...body }),
+    });
+    if (res.status === 401) { logout(); return null; }
+    return res.json();
+  }
+
+  // ── Toast ─────────────────────────────────────────────────────────────────
+
+  let toastTimer;
+  function showToast(msg, type = 'success') {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = `toast show ${type}`;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { el.classList.remove('show'); }, 3000);
+  }
+
+  // ── Login ─────────────────────────────────────────────────────────────────
+
+  async function login() {
+    const pwd = document.getElementById('pwd-input').value.trim();
+    if (!pwd) return;
+
+    const btn = document.getElementById('login-btn');
+    btn.disabled = true;
+    btn.textContent = '...';
+
+    setToken(pwd);
+    const data = await apiCall('stats');
+
+    if (!data || data.error) {
+      clearToken();
+      document.getElementById('login-error').style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Войти';
+    } else {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      renderStats(data);
+      buildDayTabs();
+      loadDay(1);
+      loadParticipants();
+    }
+  }
+
+  function logout() {
+    clearToken();
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('pwd-input').value = '';
+    document.getElementById('login-error').style.display = 'none';
+  }
+
+  // Auto-login if token in session
+  window.addEventListener('DOMContentLoaded', () => {
+    const t = getToken();
+    if (t) {
+      token = t;
+      document.getElementById('pwd-input').value = t;
+      login();
+    }
+  });
+
+  document.getElementById('login-btn').addEventListener('click', login);
+  document.getElementById('pwd-input').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+  document.getElementById('logout-btn').addEventListener('click', logout);
+
+  // ── Stats ─────────────────────────────────────────────────────────────────
+
+  function renderStats(data) {
+    document.getElementById('s-total').textContent     = data.total     ?? 0;
+    document.getElementById('s-active').textContent    = data.active    ?? 0;
+    document.getElementById('s-completed').textContent = data.completed ?? 0;
+    document.getElementById('s-dropped').textContent   = data.dropped   ?? 0;
+    document.getElementById('s-pending').textContent   = data.pending   ?? 0;
+  }
+
+  async function refreshStats() {
+    const data = await apiCall('stats');
+    if (data) renderStats(data);
+  }
+
+  // ── Day tabs ──────────────────────────────────────────────────────────────
+
+  function buildDayTabs() {
+    const wrap = document.getElementById('day-tabs');
+    wrap.innerHTML = '';
+    for (let d = 1; d <= 7; d++) {
+      const btn = document.createElement('button');
+      btn.className = 'day-tab' + (d === 1 ? ' active' : '');
+      btn.textContent = `День ${d}`;
+      btn.dataset.day = d;
+      btn.addEventListener('click', () => loadDay(d));
+      wrap.appendChild(btn);
+    }
+  }
+
+  async function loadDay(day) {
+    currentDay = day;
+    document.getElementById('broadcast-day-num').textContent = day;
+
+    document.querySelectorAll('.day-tab').forEach(b => {
+      b.classList.toggle('active', parseInt(b.dataset.day) === day);
+    });
+
+    document.getElementById('webinar-input').value = '';
+    document.getElementById('question-input').value = '';
+
+    const data = await apiCall('get_settings', { day });
+    if (data) {
+      document.getElementById('webinar-input').value  = data.webinar  ?? '';
+      document.getElementById('question-input').value = data.question ?? '';
+    }
+  }
+
+  // ── Save settings ─────────────────────────────────────────────────────────
+
+  async function saveSetting(key, value, statusId) {
+    const el = document.getElementById(statusId);
+    el.textContent = '...';
+    el.className = 'save-status show';
+
+    const data = await apiCall('set_setting', { key, value });
+    if (data?.ok) {
+      el.textContent = '✓ Сохранено';
+      el.className = 'save-status show ok';
+    } else {
+      el.textContent = '✗ Ошибка';
+      el.className = 'save-status show err';
+    }
+    setTimeout(() => { el.className = 'save-status'; }, 3000);
+  }
+
+  document.getElementById('save-webinar-btn').addEventListener('click', () => {
+    const v = document.getElementById('webinar-input').value.trim();
+    saveSetting(`day${currentDay}_webinar`, v, 'webinar-status');
+  });
+
+  document.getElementById('save-question-btn').addEventListener('click', () => {
+    const v = document.getElementById('question-input').value.trim();
+    saveSetting(`day${currentDay}_question`, v, 'question-status');
+  });
+
+  // ── Broadcast ─────────────────────────────────────────────────────────────
+
+  document.getElementById('broadcast-btn').addEventListener('click', async () => {
+    if (!confirm(`Разослать ДЗ дня ${currentDay} всем активным участницам?`)) return;
+
+    const btn = document.getElementById('broadcast-btn');
+    btn.disabled = true;
+    btn.textContent = 'Рассылка...';
+
+    const data = await apiCall('broadcast_homework', { day: currentDay });
+
+    if (data?.sent !== undefined) {
+      showToast(`Отправлено ${data.sent} участницам`, 'success');
+    } else {
+      showToast('Ошибка рассылки', 'error');
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = `Разослать ДЗ дня <span id="broadcast-day-num">${currentDay}</span>`;
+  });
+
+  // ── Manual activate ───────────────────────────────────────────────────────
+
+  document.getElementById('activate-btn').addEventListener('click', async () => {
+    const val = document.getElementById('activate-input').value.trim();
+    if (!val) return;
+
+    const data = await apiCall('activate', { identifier: val });
+
+    if (data?.ok) {
+      showToast(`Участница активирована`, 'success');
+      document.getElementById('activate-input').value = '';
+      loadParticipants();
+      refreshStats();
+    } else {
+      showToast(data?.error ?? 'Ошибка активации', 'error');
+    }
+  });
+
+  // ── Participants table ────────────────────────────────────────────────────
+
+  async function loadParticipants() {
+    document.getElementById('table-body').innerHTML = '<div class="loading">Загрузка...</div>';
+    const data = await apiCall('participants');
+    if (data?.list) {
+      allParticipants = data.list;
+      renderTable(allParticipants);
+    }
+  }
+
+  function renderTable(list) {
+    if (!list.length) {
+      document.getElementById('table-body').innerHTML = '<div class="empty">Участниц пока нет</div>';
+      return;
+    }
+
+    const rows = list.map(p => {
+      const paidAt = p.paid_at ? new Date(p.paid_at).toLocaleDateString('ru-RU') : '—';
+      const status = p.status ?? 'pending';
+      const badge = `<span class="badge ${status}">${statusLabel(status)}</span>`;
+      const activateBtn = status !== 'active'
+        ? `<button class="activate-btn" onclick="quickActivate(${p.telegram_id})">Активировать</button>`
+        : '';
+      return `<tr>
+        <td>${p.telegram_id}</td>
+        <td>${p.username ? '@' + p.username : '—'}</td>
+        <td>${badge}</td>
+        <td>${status === 'active' || status === 'completed' ? (p.current_day ?? 1) : '—'}</td>
+        <td>${paidAt}</td>
+        <td>${activateBtn}</td>
+      </tr>`;
+    }).join('');
+
+    document.getElementById('table-body').innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th>Telegram ID</th>
+            <th>Username</th>
+            <th>Статус</th>
+            <th>День</th>
+            <th>Оплата</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+  }
+
+  function statusLabel(s) {
+    return { active: 'Активна', pending: 'Ожидание', dropped: 'Выбыла', completed: 'Завершила' }[s] ?? s;
+  }
+
+  async function quickActivate(telegram_id) {
+    const data = await apiCall('activate', { identifier: String(telegram_id) });
+    if (data?.ok) {
+      showToast('Активирована', 'success');
+      loadParticipants();
+      refreshStats();
+    } else {
+      showToast(data?.error ?? 'Ошибка', 'error');
+    }
+  }
+
+  document.getElementById('search-input').addEventListener('input', e => {
+    const q = e.target.value.toLowerCase();
+    const filtered = allParticipants.filter(p =>
+      (p.username ?? '').toLowerCase().includes(q) ||
+      String(p.telegram_id).includes(q)
+    );
+    renderTable(filtered);
+  });
+</script>
+</body>
+</html>
