@@ -644,6 +644,14 @@
       opacity: 0.3;
     }
 
+    /* ─── FREE BOT GRID ─── */
+    .freebot-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
     /* ─── RESPONSIVE ─── */
     @media (max-width: 640px) {
       .about-inner { grid-template-columns: 1fr; }
@@ -658,6 +666,8 @@
       .day-num { font-size: 28px; }
       footer .footer-links { gap: 16px; flex-direction: column; align-items: center; }
       .hero-intro { font-size: 18px; }
+      .freebot-grid { grid-template-columns: 1fr; gap: 32px; }
+      .freebot-grid > div:last-child { border-left: none; border-top: 2px solid rgba(42,158,143,0.3); }
     }
   </style>
 </head>
@@ -757,7 +767,7 @@
 <!-- ═══════════ FREE BOT ═══════════ -->
 <section style="background: var(--bg); padding: 80px 0;">
   <div class="container">
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;">
+    <div class="freebot-grid">
       <div>
         <p class="section-label">Бесплатно прямо сейчас</p>
         <h2 style="font-size: clamp(28px,5vw,44px); margin-bottom: 24px;">«Хорошее состояние»</h2>
@@ -766,7 +776,7 @@
         <a href="https://t.me/ProsperityGuide_bot" class="btn-primary" style="display:inline-block;">Открыть бесплатный бот →</a>
       </div>
       <div style="background: var(--bg2); padding: 40px 32px; border-left: 2px solid rgba(42,158,143,0.3);">
-        <p style="font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--text); line-height:1.7; font-style:italic; margin-bottom:24px;">"Я составила и озвучила эту программу, чтобы вы могли шаг за шагом исследовать своё мышление и найти то, что стоит между вами и финансовой целью."</p>
+        <p style="font-family:'Jost',sans-serif; font-size:20px; color:var(--text); line-height:1.7; font-style:italic; margin-bottom:24px;">"Я составила и озвучила эту программу, чтобы вы могли шаг за шагом исследовать своё мышление и найти то, что стоит между вами и финансовой целью."</p>
         <p style="font-size:13px; color:var(--teal); letter-spacing:2px; text-transform:uppercase;">Олеся Бриз</p>
         <div style="margin-top:28px; display:flex; flex-direction:column; gap:10px;">
           <div style="font-size:14px; color:#8A8880; display:flex; gap:10px; align-items:center;"><span style="color:var(--teal);">✦</span> 7 уроков</div>
