@@ -10,6 +10,25 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* ─── URGENCY BAR ─── */
+    .urgency-bar {
+      background: linear-gradient(90deg, rgba(42,158,143,0.12), rgba(42,158,143,0.06));
+      border-bottom: 1px solid rgba(42,158,143,0.2);
+      padding: 10px 24px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+      letter-spacing: 0.3px;
+    }
+    .urgency-bar strong {
+      color: var(--gold);
+      font-weight: 500;
+    }
+    .urgency-bar .urgency-count {
+      color: var(--teal-light);
+      font-weight: 600;
+    }
+
     :root {
       --teal: #2A9E8F;
       --teal-light: #3BBFAE;
@@ -753,6 +772,9 @@
 </head>
 <body>
 
+<!-- ═══════════ URGENCY BAR ═══════════ -->
+<div class="urgency-bar" id="urgencyBar"></div>
+
 <!-- ═══════════ HERO ═══════════ -->
 <section class="hero">
   <div class="hero-intro">
@@ -766,7 +788,7 @@
   </div>
   <h1>ФИНЛАБ</h1>
   <p class="hero-subtitle">7 дней самоисследования через МАК&#8209;карты</p>
-  <p class="hero-dates">15 — 21 июня 2025 · ежедневно в 10:00 МСК</p>
+  <p class="hero-dates" id="heroDate">15 — 21 июня 2025 · ежедневно в 10:00 МСК</p>
   <a href="https://t.me/finlabo_bot" class="btn-primary">Начать бесплатно →</a>
   <p class="hero-note">Войди в бот и посмотри бесплатную практику</p>
 </section>
@@ -847,9 +869,10 @@
       <div class="about-text">
         <p class="section-label">Телесная практика</p>
         <h2 style="font-size: clamp(28px,5vw,44px); margin-bottom: 28px;">Кристина Кирис</h2>
-        <p>Телесный терапевт и преподаватель. Работаю с людьми через ощущения в теле — помогаю познавать себя и свои возможности через биомеханику и движение.</p>
-        <p>В здоровом теле — здоровый дух.</p>
-        <p style="margin-top: 8px; color: #B8B4AC;">Каждое утро курса — зарядка и медитация-расслабление с позитивными аффирмациями (~45 минут). Плюс ежедневные практики простукивания (EFT) для формирования нейронных связей изобильного мышления.</p>
+        <p>Телесный терапевт и преподаватель биомеханики и движения. Ведёт утренние зарядки и ежедневные EFT-практики — техники эмоциональной свободы через простукивание точек.</p>
+        <p>Деньги живут не только в голове. Страх бедности — это напряжение в теле. Запрет на желание — зажатость в дыхании. Невидение собственных ресурсов — хроническое усилие удерживать что-то лишнее.</p>
+        <p>Психологическая работа с картами раскрывает паттерны на уровне мышления. Кристина работает с тем слоем, куда слова не добираются. Вместе они составляют полный цикл.</p>
+        <p style="margin-top: 8px; color: #B8B4AC; font-size: 14px;">Каждое утро курса — ~45 минут движения и медитации-расслабления. Ежедневные EFT-практики помогают телу отпустить то, что ум уже понял за день работы с картами.</p>
       </div>
       <div class="about-photo">
         <img src="kristina.jpg" alt="Кристина Кирис" />
@@ -1067,6 +1090,54 @@
   <p>© 2025 Попова Олеся Ринатовна · Самозанятая</p>
   <p style="margin-top:8px; font-size:12px;">Курс носит образовательный характер и не является медицинской или психотерапевтической услугой.</p>
 </footer>
+
+<script>
+// ─── Urgency bar + hero date countdown ───────────────────────────────────
+(function() {
+  const now   = new Date();
+  const priceDeadline = new Date('2025-06-12T23:59:59+03:00'); // конец ранней цены
+  const courseStart   = new Date('2025-06-15T10:00:00+03:00'); // старт курса
+
+  const msDay = 1000 * 60 * 60 * 24;
+
+  function daysLeft(target) {
+    const diff = target - now;
+    return diff > 0 ? Math.ceil(diff / msDay) : 0;
+  }
+
+  // Urgency bar
+  const bar = document.getElementById('urgencyBar');
+  if (bar) {
+    const dPrice  = daysLeft(priceDeadline);
+    const dStart  = daysLeft(courseStart);
+
+    if (dPrice > 0) {
+      // до повышения цены
+      const plural = dPrice === 1 ? 'день' : dPrice < 5 ? 'дня' : 'дней';
+      bar.innerHTML = `Ранняя цена <strong>5 555 ₽</strong> действует ещё <span class="urgency-count">${dPrice} ${plural}</span> — до 12 июня включительно`;
+    } else if (dStart > 0) {
+      // цена уже выросла, курс ещё не начался
+      const plural = dStart === 1 ? 'день' : dStart < 5 ? 'дня' : 'дней';
+      bar.innerHTML = `До старта курса — <span class="urgency-count">${dStart} ${plural}</span> · 15 июня, 10:00 МСК`;
+    } else {
+      // курс идёт
+      bar.innerHTML = `Курс <strong>идёт прямо сейчас</strong> · 15–21 июня · следующий поток по запросу`;
+    }
+  }
+
+  // Hero dates
+  const heroDate = document.getElementById('heroDate');
+  if (heroDate) {
+    const dStart = daysLeft(courseStart);
+    if (dStart > 0) {
+      const plural = dStart === 1 ? 'день' : dStart < 5 ? 'дня' : 'дней';
+      heroDate.textContent = `15 — 21 июня 2025 · до старта ${dStart} ${plural}`;
+    } else {
+      heroDate.textContent = `15 — 21 июня 2025 · идёт прямо сейчас`;
+    }
+  }
+})();
+</script>
 
 <script>
 (function() {
