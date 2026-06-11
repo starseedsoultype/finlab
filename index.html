@@ -768,6 +768,13 @@
       .team-photo { max-height: 260px; }
       .team-info { padding: 24px 20px; }
     }
+    .hero-intro { position: relative; }
+    .hero-intro #hero-canvas {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0; opacity: 0.5; pointer-events: none;
+    }
+    .hero-intro p { position: relative; z-index: 1; }
   </style>
 </head>
 <body>
@@ -778,6 +785,7 @@
 <!-- ═══════════ HERO ═══════════ -->
 <section class="hero">
   <div class="hero-intro">
+    <canvas id="hero-canvas"></canvas>
     <p>Я люблю большие.</p>
     <p>Маленькие тоже радуют. С ними проще, спокойнее, привычнее.</p>
     <p><em>Большие заставляют сердце биться быстрее.</em></p>
@@ -1185,6 +1193,97 @@
 
   // пересчёт при ресайзе
   window.addEventListener('resize', () => goTo(current));
+})();
+</script>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.174.0/build/three.module.js"}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+
+const heroCanvas = document.getElementById('hero-canvas');
+const heroRenderer = new THREE.WebGLRenderer({ canvas: heroCanvas, antialias: true, alpha: true });
+heroRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+heroRenderer.toneMapping = THREE.ACESFilmicToneMapping;
+heroRenderer.toneMappingExposure = 1.0;
+
+const heroScene = new THREE.Scene();
+const heroCamera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+heroCamera.position.set(0, 0, 5);
+
+const heroGroup = new THREE.Group();
+
+const coreGeo = new THREE.IcosahedronGeometry(0.65, 0);
+const coreMat = new THREE.MeshPhysicalMaterial({
+  color: 0x1a1a1a, metalness: 0.95, roughness: 0.1,
+  clearcoat: 1.0, clearcoatRoughness: 0.05, reflectivity: 1.0, envMapIntensity: 0.5,
+});
+heroGroup.add(new THREE.Mesh(coreGeo, coreMat));
+
+const shellGeo = new THREE.IcosahedronGeometry(1.0, 1);
+const shellMat = new THREE.MeshPhysicalMaterial({
+  color: 0x222222, metalness: 0.1, roughness: 0.0,
+  transmission: 0.85, thickness: 0.5, clearcoat: 1.0, clearcoatRoughness: 0.0,
+  ior: 1.5, transparent: true, opacity: 0.4, envMapIntensity: 0.3,
+});
+const shellMesh = new THREE.Mesh(shellGeo, shellMat);
+heroGroup.add(shellMesh);
+
+const ringGeo = new THREE.TorusGeometry(1.35, 0.008, 16, 64);
+const ringMat = new THREE.MeshStandardMaterial({ color: 0x2A9E8F, metalness: 1, roughness: 0.3, emissive: 0x2A9E8F, emissiveIntensity: 0.1 });
+const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+ringMesh.rotation.x = Math.PI / 2;
+heroGroup.add(ringMesh);
+
+const ring2Mesh = new THREE.Mesh(ringGeo, ringMat);
+ring2Mesh.rotation.x = Math.PI / 2;
+ring2Mesh.rotation.y = Math.PI / 3;
+heroGroup.add(ring2Mesh);
+
+heroGroup.add(new THREE.LineSegments(
+  new THREE.EdgesGeometry(shellGeo),
+  new THREE.LineBasicMaterial({ color: 0x3BBFAE, transparent: true, opacity: 0.12 })
+));
+
+heroScene.add(heroGroup);
+heroScene.add(new THREE.AmbientLight(0xffffff, 0.08));
+
+const heroDir = new THREE.DirectionalLight(0x2A9E8F, 1.2);
+heroDir.position.set(3, 4, 5);
+heroScene.add(heroDir);
+
+const heroDir2 = new THREE.DirectionalLight(0xE05B78, 0.4);
+heroDir2.position.set(-4, -2, 3);
+heroScene.add(heroDir2);
+
+let mouseX = 0, mouseY = 0;
+document.addEventListener('mousemove', (e) => {
+  mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+  mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+});
+
+function resizeHero() {
+  const w = heroCanvas.parentElement.clientWidth;
+  const h = heroCanvas.parentElement.clientHeight;
+  if (!w || !h) return;
+  heroRenderer.setSize(w, h);
+  heroCamera.aspect = w / h;
+  heroCamera.updateProjectionMatrix();
+}
+resizeHero();
+window.addEventListener('resize', resizeHero);
+
+const clock = new THREE.Clock();
+(function animate() {
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+  heroGroup.rotation.y = t * 0.08 + mouseX * 0.15;
+  heroGroup.rotation.x = Math.sin(t * 0.05) * 0.1 + mouseY * 0.1;
+  shellMesh.rotation.y = -t * 0.04;
+  ringMesh.rotation.z = t * 0.06;
+  ring2Mesh.rotation.z = -t * 0.04;
+  ring2Mesh.rotation.x = Math.PI / 2 + t * 0.03;
+  heroRenderer.render(heroScene, heroCamera);
 })();
 </script>
 </body>
