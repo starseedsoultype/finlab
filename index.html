@@ -768,13 +768,18 @@
       .team-photo { max-height: 260px; }
       .team-info { padding: 24px 20px; }
     }
-    .hero-intro { position: relative; }
-    .hero-intro #hero-canvas {
-      position: absolute; top: 0; left: 0;
-      width: 100%; height: 100%;
+    .hero-title-wrap { position: relative; display: flex; flex-direction: column; align-items: center; }
+    .hero-title-wrap #hero-canvas {
+      position: absolute;
+      top: 38%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 620px; height: 620px;
+      max-width: 95vw;
       z-index: 0; opacity: 0.9; pointer-events: none;
     }
-    .hero-intro p { position: relative; z-index: 1; }
+    .hero-title-wrap h1,
+    .hero-title-wrap .hero-subtitle,
+    .hero-title-wrap .hero-dates { position: relative; z-index: 1; }
   </style>
 </head>
 <body>
@@ -785,7 +790,6 @@
 <!-- ═══════════ HERO ═══════════ -->
 <section class="hero">
   <div class="hero-intro">
-    <canvas id="hero-canvas"></canvas>
     <p>Я люблю большие.</p>
     <p>Маленькие тоже радуют. С ними проще, спокойнее, привычнее.</p>
     <p><em>Большие заставляют сердце биться быстрее.</em></p>
@@ -794,9 +798,12 @@
     <p>Интересно наблюдать за тем, сколько всего происходит между человеком и тем, что он хочет получить.</p>
     <p><em>Особенно когда речь идёт о деньгах.</em></p>
   </div>
-  <h1>ФИНЛАБ</h1>
-  <p class="hero-subtitle">7 дней самоисследования через МАК&#8209;карты</p>
-  <p class="hero-dates" id="heroDate">15 — 21 июня 2026 · ежедневно в 10:00 МСК</p>
+  <div class="hero-title-wrap">
+    <canvas id="hero-canvas"></canvas>
+    <h1>ФИНЛАБ</h1>
+    <p class="hero-subtitle">7 дней самоисследования через МАК&#8209;карты</p>
+    <p class="hero-dates" id="heroDate">15 — 21 июня 2026 · ежедневно в 10:00 МСК</p>
+  </div>
   <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
     <a href="https://t.me/finlabo_bot" class="btn-primary">Telegram → @finlabo_bot</a>
     <a href="https://vk.com/psychologist_olesyabreeze" class="btn-primary" style="background: linear-gradient(135deg, #0077B5, #00A8E8);">ВКонтакте → ФИНЛАБ</a>
@@ -1209,7 +1216,7 @@ heroRenderer.toneMappingExposure = 1.0;
 
 const heroScene = new THREE.Scene();
 const heroCamera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-heroCamera.position.set(0, 0, 5);
+heroCamera.position.set(0, 0, 4);
 
 const heroGroup = new THREE.Group();
 
@@ -1264,8 +1271,8 @@ document.addEventListener('mousemove', (e) => {
 });
 
 function resizeHero() {
-  const w = heroCanvas.parentElement.clientWidth;
-  const h = heroCanvas.parentElement.clientHeight;
+  const w = heroCanvas.clientWidth;
+  const h = heroCanvas.clientHeight;
   if (!w || !h) return;
   heroRenderer.setSize(w, h);
   heroCamera.aspect = w / h;
