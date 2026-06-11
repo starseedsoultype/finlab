@@ -238,22 +238,38 @@ const DAY_TOPICS = {
   7: "Образ будущего себя",
 };
 
-// Получаем telegram_id из URL
+// Получаем ID из URL — может быть либо telegram_id (цифры), либо vk{vk_id}
 const params = new URLSearchParams(location.search);
-const tgId = params.get("id");
+const idParam = params.get("id");
 
-if (!tgId || !/^\d+$/.test(tgId)) {
-  showDenied("Ссылка недействительна. Получи её в боте @finlabo_bot");
+if (!idParam) {
+  showDenied("Ссылка недействительна. Получи её в боте.");
+} else if (/^vk\d+$/.test(idParam)) {
+  // VK ID — формат: vk12345678
+  const vkId = idParam.slice(2);
+  loadContent({ type: "vk_id", value: parseInt(vkId) });
+} else if (/^\d+$/.test(idParam)) {
+  // Telegram ID — формат: 12345678
+  loadContent({ type: "telegram_id", value: parseInt(idParam) });
 } else {
-  loadContent(tgId);
+  showDenied("Ссылка недействительна. Получи её в боте.");
 }
 
-async function loadContent(telegram_id) {
+async function loadContent(idInfo) {
   try {
+    const body = { action: "get_member_content" };
+
+    // Добавляем правильный параметр в зависимости от типа ID
+    if (idInfo.type === "vk_id") {
+      body.vk_id = idInfo.value;
+    } else {
+      body.telegram_id = idInfo.value;
+    }
+
     const res = await fetch(ADMIN_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "get_member_content", telegram_id }),
+      body: JSON.stringify(body),
     });
     const data = await res.json();
 
