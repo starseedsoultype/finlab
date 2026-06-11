@@ -529,7 +529,7 @@
     <div class="manual-panel">
       <h3>Активировать участницу вручную</h3>
       <div class="manual-row">
-        <input type="text" id="activate-input" placeholder="Telegram ID или @username" />
+        <input type="text" id="activate-input" placeholder="Telegram ID, vk + ID или @username" />
         <button class="btn" id="activate-btn">Активировать</button>
       </div>
     </div>
@@ -538,7 +538,7 @@
     <div class="table-wrap">
       <div class="table-header">
         <h3>Участницы</h3>
-        <input type="text" id="search-input" placeholder="Поиск по username..." />
+        <input type="text" id="search-input" placeholder="Поиск по username или ID..." />
       </div>
       <div id="table-body">
         <div class="loading">Загрузка...</div>
@@ -773,11 +773,16 @@
       const paidAt = p.paid_at ? new Date(p.paid_at).toLocaleDateString('ru-RU') : '—';
       const status = p.status ?? 'pending';
       const badge = `<span class="badge ${status}">${statusLabel(status)}</span>`;
-      const activateBtn = status !== 'active'
-        ? `<button class="activate-btn" onclick="quickActivate(${p.telegram_id})">Активировать</button>`
+      const isVK = !!p.vk_id;
+      const channel = isVK ? 'VK' : 'TG';
+      const idValue = isVK ? p.vk_id : (p.telegram_id ?? '—');
+      const activateId = isVK ? ('vk' + p.vk_id) : p.telegram_id;
+      const activateBtn = (status !== 'active' && activateId)
+        ? `<button class="activate-btn" onclick="quickActivate('${activateId}')">Активировать</button>`
         : '';
       return `<tr>
-        <td>${p.telegram_id}</td>
+        <td>${channel}</td>
+        <td>${idValue}</td>
         <td>${p.username ? '@' + p.username : '—'}</td>
         <td>${badge}</td>
         <td>${status === 'active' || status === 'completed' ? (p.current_day ?? 1) : '—'}</td>
@@ -790,7 +795,8 @@
       <table>
         <thead>
           <tr>
-            <th>Telegram ID</th>
+            <th>Канал</th>
+            <th>ID</th>
             <th>Username</th>
             <th>Статус</th>
             <th>День</th>
@@ -806,8 +812,8 @@
     return { active: 'Активна', pending: 'Ожидание', dropped: 'Выбыла', completed: 'Завершила' }[s] ?? s;
   }
 
-  async function quickActivate(telegram_id) {
-    const data = await apiCall('activate', { identifier: String(telegram_id) });
+  async function quickActivate(identifier) {
+    const data = await apiCall('activate', { identifier: String(identifier) });
     if (data?.ok) {
       showToast('Активирована', 'success');
       loadParticipants();
@@ -821,7 +827,8 @@
     const q = e.target.value.toLowerCase();
     const filtered = allParticipants.filter(p =>
       (p.username ?? '').toLowerCase().includes(q) ||
-      String(p.telegram_id).includes(q)
+      String(p.telegram_id ?? '').includes(q) ||
+      String(p.vk_id ?? '').includes(q)
     );
     renderTable(filtered);
   });
