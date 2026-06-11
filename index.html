@@ -772,7 +772,7 @@
     .hero-intro #hero-canvas {
       position: absolute; top: 0; left: 0;
       width: 100%; height: 100%;
-      z-index: 0; opacity: 0.5; pointer-events: none;
+      z-index: 0; opacity: 0.9; pointer-events: none;
     }
     .hero-intro p { position: relative; z-index: 1; }
   </style>
@@ -1215,7 +1215,8 @@ const heroGroup = new THREE.Group();
 
 const coreGeo = new THREE.IcosahedronGeometry(0.65, 0);
 const coreMat = new THREE.MeshPhysicalMaterial({
-  color: 0x1a1a1a, metalness: 0.95, roughness: 0.1,
+  color: 0x14605a, metalness: 0.9, roughness: 0.15,
+  emissive: 0x0d3d38, emissiveIntensity: 0.5,
   clearcoat: 1.0, clearcoatRoughness: 0.05, reflectivity: 1.0, envMapIntensity: 0.5,
 });
 heroGroup.add(new THREE.Mesh(coreGeo, coreMat));
@@ -1230,7 +1231,7 @@ const shellMesh = new THREE.Mesh(shellGeo, shellMat);
 heroGroup.add(shellMesh);
 
 const ringGeo = new THREE.TorusGeometry(1.35, 0.008, 16, 64);
-const ringMat = new THREE.MeshStandardMaterial({ color: 0x2A9E8F, metalness: 1, roughness: 0.3, emissive: 0x2A9E8F, emissiveIntensity: 0.1 });
+const ringMat = new THREE.MeshStandardMaterial({ color: 0x3BBFAE, metalness: 1, roughness: 0.3, emissive: 0x3BBFAE, emissiveIntensity: 0.8 });
 const ringMesh = new THREE.Mesh(ringGeo, ringMat);
 ringMesh.rotation.x = Math.PI / 2;
 heroGroup.add(ringMesh);
@@ -1242,17 +1243,17 @@ heroGroup.add(ring2Mesh);
 
 heroGroup.add(new THREE.LineSegments(
   new THREE.EdgesGeometry(shellGeo),
-  new THREE.LineBasicMaterial({ color: 0x3BBFAE, transparent: true, opacity: 0.12 })
+  new THREE.LineBasicMaterial({ color: 0x3BBFAE, transparent: true, opacity: 0.45 })
 ));
 
 heroScene.add(heroGroup);
 heroScene.add(new THREE.AmbientLight(0xffffff, 0.08));
 
-const heroDir = new THREE.DirectionalLight(0x2A9E8F, 1.2);
+const heroDir = new THREE.DirectionalLight(0x3BBFAE, 2.4);
 heroDir.position.set(3, 4, 5);
 heroScene.add(heroDir);
 
-const heroDir2 = new THREE.DirectionalLight(0xE05B78, 0.4);
+const heroDir2 = new THREE.DirectionalLight(0xE05B78, 1.0);
 heroDir2.position.set(-4, -2, 3);
 heroScene.add(heroDir2);
 
