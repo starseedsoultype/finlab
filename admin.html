@@ -536,7 +536,8 @@
     <!-- Broadcast materials link -->
     <div class="broadcast-panel">
       <h3>Рассылка ссылки на материалы</h3>
-      <p class="broadcast-info">Все участницы курса (активные + завершившие, TG и VK) получат свою персональную ссылку на страницу материалов.</p>
+      <p class="broadcast-info">Все участницы курса (активные + завершившие, TG и VK) получат это сообщение + свою персональную ссылку. Если оставить пусто — уйдёт текст по умолчанию.</p>
+      <textarea id="materials-message" placeholder="Например: Привет! Собрала всё в одном месте — твоя личная страница курса ниже. Загляни 🌿"></textarea>
       <button class="btn broadcast" id="broadcast-materials-btn">Разослать ссылку на материалы</button>
     </div>
 
@@ -763,7 +764,8 @@
     btn.disabled = true;
     btn.textContent = 'Рассылка...';
 
-    const data = await apiCall('broadcast_materials', {});
+    const message = document.getElementById('materials-message').value.trim();
+    const data = await apiCall('broadcast_materials', { message });
 
     if (data?.sent !== undefined) {
       showToast(`Ссылка отправлена ${data.sent} участницам`, 'success');
