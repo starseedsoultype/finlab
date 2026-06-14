@@ -533,6 +533,13 @@
       <button class="btn broadcast" id="broadcast-btn">Разослать ДЗ дня <span id="broadcast-day-num">1</span></button>
     </div>
 
+    <!-- Broadcast materials link -->
+    <div class="broadcast-panel">
+      <h3>Рассылка ссылки на материалы</h3>
+      <p class="broadcast-info">Все участницы курса (активные + завершившие, TG и VK) получат свою персональную ссылку на страницу материалов.</p>
+      <button class="btn broadcast" id="broadcast-materials-btn">Разослать ссылку на материалы</button>
+    </div>
+
     <!-- Manual activate -->
     <div class="manual-panel">
       <h3>Активировать участницу вручную</h3>
@@ -747,6 +754,25 @@
 
     btn.disabled = false;
     btn.innerHTML = `Разослать ДЗ дня <span id="broadcast-day-num">${currentDay}</span>`;
+  });
+
+  document.getElementById('broadcast-materials-btn').addEventListener('click', async () => {
+    if (!confirm('Разослать ссылку на страницу материалов всем участницам курса?')) return;
+
+    const btn = document.getElementById('broadcast-materials-btn');
+    btn.disabled = true;
+    btn.textContent = 'Рассылка...';
+
+    const data = await apiCall('broadcast_materials', {});
+
+    if (data?.sent !== undefined) {
+      showToast(`Ссылка отправлена ${data.sent} участницам`, 'success');
+    } else {
+      showToast('Ошибка рассылки', 'error');
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Разослать ссылку на материалы';
   });
 
   // ── Manual activate ───────────────────────────────────────────────────────
