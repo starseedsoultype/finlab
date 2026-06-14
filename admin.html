@@ -515,6 +515,11 @@
         <button class="btn" id="save-webinar-btn">Сохранить<span class="save-status" id="webinar-status"></span></button>
       </div>
       <div class="panel">
+        <h3>Ссылка на запись</h3>
+        <input type="url" id="recording-input" placeholder="https://... (появится на странице материалов)" />
+        <button class="btn" id="save-recording-btn">Сохранить<span class="save-status" id="recording-status"></span></button>
+      </div>
+      <div class="panel">
         <h3>Вопрос дня (задание)</h3>
         <textarea id="question-input" placeholder="Текст вопроса для домашнего задания..."></textarea>
         <button class="btn" id="save-question-btn">Сохранить<span class="save-status" id="question-status"></span></button>
@@ -679,12 +684,14 @@
     });
 
     document.getElementById('webinar-input').value = '';
+    document.getElementById('recording-input').value = '';
     document.getElementById('question-input').value = '';
 
     const data = await apiCall('get_settings', { day });
     if (data) {
-      document.getElementById('webinar-input').value  = data.webinar  ?? '';
-      document.getElementById('question-input').value = data.question ?? '';
+      document.getElementById('webinar-input').value   = data.webinar   ?? '';
+      document.getElementById('recording-input').value = data.recording ?? '';
+      document.getElementById('question-input').value  = data.question  ?? '';
     }
   }
 
@@ -709,6 +716,11 @@
   document.getElementById('save-webinar-btn').addEventListener('click', () => {
     const v = document.getElementById('webinar-input').value.trim();
     saveSetting(`day${currentDay}_webinar`, v, 'webinar-status');
+  });
+
+  document.getElementById('save-recording-btn').addEventListener('click', () => {
+    const v = document.getElementById('recording-input').value.trim();
+    saveSetting(`day${currentDay}_recording`, v, 'recording-status');
   });
 
   document.getElementById('save-question-btn').addEventListener('click', () => {
