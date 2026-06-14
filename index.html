@@ -813,6 +813,7 @@
     <a href="https://vk.com/psychologist_olesyabreeze" class="btn-primary" style="background: linear-gradient(135deg, #0077B5, #00A8E8);">ВКонтакте → ФИНЛАБ</a>
   </div>
   <p class="hero-note">Войди в бот и посмотри бесплатную практику</p>
+  <p class="hero-count" id="heroCount" style="display:none; margin-top:14px; font-size:15px; color:#2A9E8F; font-weight:600;"></p>
 </section>
 
 <div class="teal-line"></div>
@@ -1157,6 +1158,23 @@
       heroDate.textContent = `15 — 21 июня 2026 · идёт прямо сейчас`;
     }
   }
+
+  // Счётчик участников в потоке
+  fetch('https://ogqtywdsplyqwfznqxnu.supabase.co/functions/v1/finlab-bot?count=1')
+    .then(r => r.json())
+    .then(d => {
+      const n = Number(d.count) || 0;
+      const el = document.getElementById('heroCount');
+      if (el && n > 0) {
+        const m10 = n % 10, m100 = n % 100;
+        const word = (m10 === 1 && m100 !== 11) ? 'человек'
+          : (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) ? 'человека'
+          : 'человек';
+        el.textContent = `🔥 Уже ${n} ${word} в потоке`;
+        el.style.display = 'block';
+      }
+    })
+    .catch(() => {});
 })();
 </script>
 

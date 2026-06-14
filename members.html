@@ -224,6 +224,7 @@
       <div class="dot"></div>
       <span id="status-text">Загрузка...</span>
     </div>
+    <p id="stream-count" style="display:none; margin:10px 0 0; font-size:14px; color:#2A9E8F; font-weight:600;"></p>
     <div id="days-list"></div>
   </main>
 </div>
@@ -310,6 +311,23 @@ function showContent(data) {
     courseDay > 0
       ? `Идёт день ${courseDay} из 7 · Твой прогресс: день ${myDay}`
       : `Курс начнётся 15 июня · Ты в списке участниц`;
+
+  // Счётчик участниц в потоке
+  fetch("https://ogqtywdsplyqwfznqxnu.supabase.co/functions/v1/finlab-bot?count=1")
+    .then(r => r.json())
+    .then(d => {
+      const n = Number(d.count) || 0;
+      const el = document.getElementById("stream-count");
+      if (el && n > 0) {
+        const m10 = n % 10, m100 = n % 100;
+        const word = (m10 === 1 && m100 !== 11) ? "человек"
+          : (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) ? "человека"
+          : "человек";
+        el.textContent = `Вас в потоке: ${n} ${word}`;
+        el.style.display = "block";
+      }
+    })
+    .catch(() => {});
 
   const list = document.getElementById("days-list");
   list.innerHTML = "";
