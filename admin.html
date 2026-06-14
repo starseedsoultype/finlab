@@ -541,12 +541,12 @@
       <button class="btn broadcast" id="broadcast-materials-btn">Разослать ссылку на материалы</button>
     </div>
 
-    <!-- Broadcast Telegram group invite -->
+    <!-- Broadcast chat invite -->
     <div class="broadcast-panel">
-      <h3>Приглашение в Telegram-группу</h3>
-      <p class="broadcast-info">Все TG-участницы (активные + завершившие) получат приглашение в общий чат + ссылку. VK-участницам не уходит — в Telegram-группу из ВК зайти нельзя. Если оставить пусто — уйдёт текст по умолчанию.</p>
+      <h3>Приглашение в общий чат</h3>
+      <p class="broadcast-info">Все участницы (активные + завершившие) получат приглашение в общий чат: TG-участницам уходит Telegram-группа, VK-участницам — VK-чат. Если оставить пусто — уйдёт текст по умолчанию.</p>
       <textarea id="group-message" placeholder="Например: Девочки, у нас есть общий чат — телесные практики, вопросы, поддержка. Заходите 💬"></textarea>
-      <button class="btn broadcast" id="broadcast-group-btn">Пригласить в Telegram-группу</button>
+      <button class="btn broadcast" id="broadcast-group-btn">Пригласить в общий чат</button>
     </div>
 
     <!-- Manual activate -->
@@ -786,7 +786,7 @@
   });
 
   document.getElementById('broadcast-group-btn').addEventListener('click', async () => {
-    if (!confirm('Разослать приглашение в Telegram-группу всем TG-участницам?')) return;
+    if (!confirm('Разослать приглашение в общий чат всем участницам (TG → Telegram-группа, VK → VK-чат)?')) return;
 
     const btn = document.getElementById('broadcast-group-btn');
     btn.disabled = true;
@@ -796,14 +796,13 @@
     const data = await apiCall('broadcast_group', { message });
 
     if (data?.sent !== undefined) {
-      const skip = data.skippedVK ? `, пропущено VK: ${data.skippedVK}` : '';
-      showToast(`Приглашение отправлено ${data.sent} участницам${skip}`, 'success');
+      showToast(`Приглашение отправлено ${data.sent} участницам`, 'success');
     } else {
       showToast('Ошибка рассылки', 'error');
     }
 
     btn.disabled = false;
-    btn.textContent = 'Пригласить в Telegram-группу';
+    btn.textContent = 'Пригласить в общий чат';
   });
 
   // ── Manual activate ───────────────────────────────────────────────────────
