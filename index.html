@@ -806,7 +806,7 @@
     <canvas id="hero-canvas"></canvas>
     <h1>ФИНЛАБ</h1>
     <p class="hero-subtitle">7 дней самоисследования через МАК&#8209;карты</p>
-    <p class="hero-dates" id="heroDate">15 — 21 июня 2026 · ежедневно в 10:00 МСК</p>
+    <p class="hero-dates" id="heroDate">15 — 21 июня 2026 · ежедневно в 18:00 МСК</p>
   </div>
   <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
     <a href="https://t.me/finlabo_bot" class="btn-primary">Telegram → @finlabo_bot</a>
@@ -1139,7 +1139,7 @@
     } else if (dStart > 0) {
       // цена уже выросла, курс ещё не начался
       const plural = dStart === 1 ? 'день' : dStart < 5 ? 'дня' : 'дней';
-      bar.innerHTML = `До старта курса — <span class="urgency-count">${dStart} ${plural}</span> · 15 июня, 10:00 МСК`;
+      bar.innerHTML = `До старта курса — <span class="urgency-count">${dStart} ${plural}</span> · 15 июня, 18:00 МСК`;
     } else {
       // курс идёт
       bar.innerHTML = `Курс <strong>идёт прямо сейчас</strong> · 15–21 июня · следующий поток по запросу`;
