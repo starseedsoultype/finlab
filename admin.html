@@ -546,6 +546,18 @@
       <button class="btn broadcast" id="broadcast-materials-btn">Разослать ссылку на материалы</button>
     </div>
 
+    <!-- Group chat links (per cohort) -->
+    <div class="broadcast-panel">
+      <h3>Ссылки на чат</h3>
+      <p class="broadcast-info">Используются в приветствии, приглашении и напоминаниях бота. Под каждый новый поток меняй ссылку на новую группу. Между потоками можно поставить постоянную группу. Если оставить пусто — бот возьмёт ссылку текущего потока по умолчанию.</p>
+      <input type="url" id="group-link-tg-input" placeholder="https://t.me/+... (Telegram-группа потока)" />
+      <button class="btn" id="save-group-link-tg-btn">Сохранить TG-ссылку</button>
+      <span id="group-link-tg-status"></span>
+      <input type="url" id="group-link-vk-input" placeholder="https://vk.me/join/... (VK-чат потока)" style="margin-top:10px;" />
+      <button class="btn" id="save-group-link-vk-btn">Сохранить VK-ссылку</button>
+      <span id="group-link-vk-status"></span>
+    </div>
+
     <!-- Broadcast chat invite -->
     <div class="broadcast-panel">
       <h3>Приглашение в общий чат</h3>
@@ -641,6 +653,7 @@
       buildDayTabs();
       loadDay(1);
       loadParticipants();
+      loadGroupLinks();
     }
   }
 
@@ -755,6 +768,25 @@
     const v = document.getElementById('question-input').value.trim();
     saveSetting(`day${currentDay}_question`, v, 'question-status');
   });
+
+  document.getElementById('save-group-link-tg-btn').addEventListener('click', () => {
+    const v = document.getElementById('group-link-tg-input').value.trim();
+    saveSetting('group_link_tg', v, 'group-link-tg-status');
+  });
+
+  document.getElementById('save-group-link-vk-btn').addEventListener('click', () => {
+    const v = document.getElementById('group-link-vk-input').value.trim();
+    saveSetting('group_link_vk', v, 'group-link-vk-status');
+  });
+
+  // Загрузка текущих ссылок на чат (вызывается после логина)
+  async function loadGroupLinks() {
+    const links = await apiCall('get_group_links', {});
+    if (links) {
+      document.getElementById('group-link-tg-input').value = links.tg ?? '';
+      document.getElementById('group-link-vk-input').value = links.vk ?? '';
+    }
+  }
 
   // ── Broadcast ─────────────────────────────────────────────────────────────
 
