@@ -504,6 +504,26 @@
       <div class="stat-card"><div class="num" id="s-pending">—</div><div class="lbl">Ожидают оплаты</div></div>
     </div>
 
+    <!-- Current course day -->
+    <div class="broadcast-panel" style="border:1px solid var(--teal); margin-bottom:24px;">
+      <h3>📅 Текущий день курса</h3>
+      <p class="broadcast-info">Главный переключатель: какие дни открыты у участниц в кабинете. Сейчас открыт день: <b id="current-day-label">—</b>. Чтобы открыть следующий день — выбери его и нажми «Открыть».</p>
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <select id="current-day-select" style="padding:10px 14px; border-radius:8px;">
+          <option value="0">0 — курс ещё не начался</option>
+          <option value="1">День 1</option>
+          <option value="2">День 2</option>
+          <option value="3">День 3</option>
+          <option value="4">День 4</option>
+          <option value="5">День 5</option>
+          <option value="6">День 6</option>
+          <option value="7">День 7</option>
+        </select>
+        <button class="btn" id="save-current-day-btn">Открыть выбранный день</button>
+        <span id="current-day-status"></span>
+      </div>
+    </div>
+
     <!-- Day tabs -->
     <div class="day-tabs" id="day-tabs"></div>
 
@@ -687,6 +707,10 @@
     document.getElementById('s-completed').textContent = data.completed ?? 0;
     document.getElementById('s-dropped').textContent   = data.dropped   ?? 0;
     document.getElementById('s-pending').textContent   = data.pending   ?? 0;
+
+    const cd = data.current_day ?? 0;
+    document.getElementById('current-day-label').textContent = cd === 0 ? 'курс не начался' : `День ${cd}`;
+    document.getElementById('current-day-select').value = String(cd);
   }
 
   async function refreshStats() {
@@ -767,6 +791,14 @@
   document.getElementById('save-question-btn').addEventListener('click', () => {
     const v = document.getElementById('question-input').value.trim();
     saveSetting(`day${currentDay}_question`, v, 'question-status');
+  });
+
+  document.getElementById('save-current-day-btn').addEventListener('click', async () => {
+    const v = document.getElementById('current-day-select').value;
+    const label = v === '0' ? 'курс ещё не начался' : `День ${v}`;
+    if (!confirm(`Открыть участницам: ${label}? Это сразу изменит то, что они видят в кабинете.`)) return;
+    await saveSetting('current_day', v, 'current-day-status');
+    refreshStats();
   });
 
   document.getElementById('save-group-link-tg-btn').addEventListener('click', () => {
