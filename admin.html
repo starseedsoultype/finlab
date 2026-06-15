@@ -515,9 +515,14 @@
         <button class="btn" id="save-webinar-btn">Сохранить<span class="save-status" id="webinar-status"></span></button>
       </div>
       <div class="panel">
-        <h3>Ссылка на запись</h3>
-        <input type="url" id="recording-input" placeholder="https://... (появится на странице материалов)" />
+        <h3>Ссылка на запись (YouTube)</h3>
+        <input type="url" id="recording-input" placeholder="https://youtu.be/... (появится на странице материалов)" />
         <button class="btn" id="save-recording-btn">Сохранить<span class="save-status" id="recording-status"></span></button>
+      </div>
+      <div class="panel">
+        <h3>Ссылка на запись (VK)</h3>
+        <input type="url" id="recording-vk-input" placeholder="https://vk.com/video... (появится на странице материалов)" />
+        <button class="btn" id="save-recording-vk-btn">Сохранить<span class="save-status" id="recording-vk-status"></span></button>
       </div>
       <div class="panel">
         <h3>Вопрос дня (задание)</h3>
@@ -701,13 +706,15 @@
 
     document.getElementById('webinar-input').value = '';
     document.getElementById('recording-input').value = '';
+    document.getElementById('recording-vk-input').value = '';
     document.getElementById('question-input').value = '';
 
     const data = await apiCall('get_settings', { day });
     if (data) {
-      document.getElementById('webinar-input').value   = data.webinar   ?? '';
-      document.getElementById('recording-input').value = data.recording ?? '';
-      document.getElementById('question-input').value  = data.question  ?? '';
+      document.getElementById('webinar-input').value      = data.webinar      ?? '';
+      document.getElementById('recording-input').value    = data.recording    ?? '';
+      document.getElementById('recording-vk-input').value = data.recording_vk ?? '';
+      document.getElementById('question-input').value     = data.question     ?? '';
     }
   }
 
@@ -737,6 +744,11 @@
   document.getElementById('save-recording-btn').addEventListener('click', () => {
     const v = document.getElementById('recording-input').value.trim();
     saveSetting(`day${currentDay}_recording`, v, 'recording-status');
+  });
+
+  document.getElementById('save-recording-vk-btn').addEventListener('click', () => {
+    const v = document.getElementById('recording-vk-input').value.trim();
+    saveSetting(`day${currentDay}_recording_vk`, v, 'recording-vk-status');
   });
 
   document.getElementById('save-question-btn').addEventListener('click', () => {

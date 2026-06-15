@@ -373,13 +373,20 @@ function buildDayCard(d, isUnlocked) {
         </div>`;
     }
 
-    // Запись
-    if (d.recording) {
+    // Запись (YouTube и/или VK)
+    if (d.recording || d.recording_vk) {
+      let recBtns = "";
+      if (d.recording) {
+        recBtns += `<a class="link-btn secondary" href="${d.recording}" target="_blank">📹 Смотреть на YouTube</a>`;
+      }
+      if (d.recording_vk) {
+        recBtns += `<a class="link-btn secondary" href="${d.recording_vk}" target="_blank">📹 Смотреть в VK</a>`;
+      }
       html += `
         <div class="section">
           <div class="section-label">Запись</div>
           <div class="section-content">
-            <a class="link-btn secondary" href="${d.recording}" target="_blank">📹 Смотреть запись</a>
+            ${recBtns}
           </div>
         </div>`;
     }
