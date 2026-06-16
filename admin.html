@@ -928,7 +928,9 @@
       if (activateId) {
         if (status === 'dropped') {
           activateBtn = `<button class="activate-btn" onclick="quickRestore('${activateId}')">Вернуть</button>`;
-        } else if (status !== 'active' && status !== 'completed') {
+        } else if (status === 'active') {
+          activateBtn = `<button class="activate-btn" onclick="quickKeep('${activateId}')">Оставить на курсе</button>`;
+        } else if (status !== 'completed') {
           activateBtn = `<button class="activate-btn" onclick="quickActivate('${activateId}')">Активировать</button>`;
         }
       }
@@ -980,6 +982,18 @@
     const data = await apiCall('restore', { identifier: String(identifier) });
     if (data?.ok) {
       showToast('Возвращена в курс', 'success');
+      loadParticipants();
+      refreshStats();
+    } else {
+      showToast(data?.error ?? 'Ошибка', 'error');
+    }
+  }
+
+  async function quickKeep(identifier) {
+    if (!confirm('Оставить участницу на курсе? Срок сдачи задания продлится на 24 часа, отчисления не будет.')) return;
+    const data = await apiCall('keep', { identifier: String(identifier) });
+    if (data?.ok) {
+      showToast('Оставлена на курсе (+24ч)', 'success');
       loadParticipants();
       refreshStats();
     } else {
