@@ -634,6 +634,32 @@
       flex-shrink: 0;
     }
 
+    /* ─── Разделитель форматов в #pricing ─── */
+    .pricing-separator {
+      margin: 2.5rem 0 1.5rem;
+      text-align: center;
+    }
+
+    .pricing-separator p {
+      font-size: 1rem;
+      color: #E8E4DC;
+      margin-bottom: 1rem;
+    }
+
+    .separator-includes {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      color: #8A8880;
+    }
+
+    .separator-includes li::before {
+      content: "✦ ";
+      color: #2A9E8F;
+    }
+
     /* ─── FOOTER ─── */
     footer {
       background: var(--bg2);
@@ -1124,6 +1150,18 @@
       <li>Повтор архива через 100 дней</li>
       <li>Чат участников</li>
     </ul>
+
+    <div class="pricing-separator">
+      <p>Не хочешь привязываться к датам — но хочешь двигаться в своём темпе к своим большим целям?</p>
+      <ul class="separator-includes">
+        <li>Записи всех 7 эфиров</li>
+        <li>Задания в боте по каждому дню</li>
+        <li>Персональная AI-обратная связь</li>
+        <li>Архив твоих ответов по окончании</li>
+        <li>Повтор архива через 100 дней</li>
+        <li>Живое сообщество — Telegram-канал и группа Олеси</li>
+      </ul>
+    </div>
 
     <!-- Evergreen -->
     <div class="price-pair" style="margin-top:40px; border-color: rgba(201,169,110,0.2);">
