@@ -177,6 +177,9 @@
       margin-bottom: 16px;
     }
 
+    /* FAQ — поворот «+» при раскрытии */
+    details[open] summary span { transform: rotate(45deg); }
+
     section h2 {
       font-size: clamp(32px, 6vw, 52px);
       margin-bottom: 40px;
@@ -1014,6 +1017,69 @@
     </div>
   </div>
   <div class="ig-controls" id="igDots"></div>
+</section>
+
+<div class="teal-line"></div>
+
+<!-- ═══════════ FAQ ═══════════ -->
+<section style="background: var(--bg); padding: 80px 0;">
+<div class="container">
+  <p class="section-label">Вопросы</p>
+  <h2>Если ты сомневаешься</h2>
+  <div style="display:flex; flex-direction:column; gap:2px; margin-top:40px;">
+
+    <details style="background:var(--bg2); padding:24px 28px; cursor:pointer;">
+      <summary style="font-family:'Jost',sans-serif; font-size:18px; list-style:none; display:flex; justify-content:space-between; align-items:center;">
+        Я никогда не работала с МАК-картами. Это сложно?
+        <span style="color:var(--teal); font-size:22px; display:inline-block; transition:transform 0.2s;">+</span>
+      </summary>
+      <p style="margin-top:16px; color:#B8B4AC; font-size:15px; line-height:1.8;">
+        Не нужно ничего знать заранее. МАК-карта — это просто изображение, которое помогает обойти привычные объяснения и увидеть что-то настоящее. Олеся ведёт каждый день так, что первый опыт с картами становится естественным.
+      </p>
+    </details>
+
+    <details style="background:var(--bg2); padding:24px 28px; cursor:pointer;">
+      <summary style="font-family:'Jost',sans-serif; font-size:18px; list-style:none; display:flex; justify-content:space-between; align-items:center;">
+        Что если я не смогу прийти на эфир вживую?
+        <span style="color:var(--teal); font-size:22px; display:inline-block; transition:transform 0.2s;">+</span>
+      </summary>
+      <p style="margin-top:16px; color:#B8B4AC; font-size:15px; line-height:1.8;">
+        Все эфиры записываются. Пропустить один день — не значит потерять. Задания в боте доступны в своём темпе. Если хочешь работать без дедлайнов с самого начала — есть формат «В своём темпе» за ₽ 1 111.
+      </p>
+    </details>
+
+    <details style="background:var(--bg2); padding:24px 28px; cursor:pointer;">
+      <summary style="font-family:'Jost',sans-serif; font-size:18px; list-style:none; display:flex; justify-content:space-between; align-items:center;">
+        Как работает AI-обратная связь? Это шаблонные ответы?
+        <span style="color:var(--teal); font-size:22px; display:inline-block; transition:transform 0.2s;">+</span>
+      </summary>
+      <p style="margin-top:16px; color:#B8B4AC; font-size:15px; line-height:1.8;">
+        Нет. Бот читает именно твой ответ и отвечает на него — не на «тему дня». Это не замена живому контакту с Олесей, но это не формальный отклик по шаблону. Ты получаешь отклик, который видит твои слова.
+      </p>
+    </details>
+
+    <details style="background:var(--bg2); padding:24px 28px; cursor:pointer;">
+      <summary style="font-family:'Jost',sans-serif; font-size:18px; list-style:none; display:flex; justify-content:space-between; align-items:center;">
+        Это психотерапия? Мне нужна подготовка?
+        <span style="color:var(--teal); font-size:22px; display:inline-block; transition:transform 0.2s;">+</span>
+      </summary>
+      <p style="margin-top:16px; color:#B8B4AC; font-size:15px; line-height:1.8;">
+        ФИНЛАБ — образовательный курс, не терапия. Олеся — психолог, и это чувствуется в том, как она держит пространство. Но это не работа с травмами и не диагностика. Нужна только готовность быть честной с собой.
+      </p>
+    </details>
+
+    <details style="background:var(--bg2); padding:24px 28px; cursor:pointer;">
+      <summary style="font-family:'Jost',sans-serif; font-size:18px; list-style:none; display:flex; justify-content:space-between; align-items:center;">
+        Можно оплатить иностранной картой?
+        <span style="color:var(--teal); font-size:22px; display:inline-block; transition:transform 0.2s;">+</span>
+      </summary>
+      <p style="margin-top:16px; color:#B8B4AC; font-size:15px; line-height:1.8;">
+        Да. Принимаем оплату через Stripe (иностранные карты) и через Prodamus (российские карты). Уточни способ при регистрации в боте.
+      </p>
+    </details>
+
+  </div>
+</div>
 </section>
 
 <div class="teal-line"></div>
