@@ -641,23 +641,36 @@
     }
 
     .pricing-separator p {
-      font-size: 1rem;
+      font-family: 'Jost', sans-serif;
+      font-size: 22px;
+      line-height: 1.4;
       color: #E8E4DC;
-      margin-bottom: 1rem;
+      max-width: 560px;
+      margin: 0 auto 1.5rem;
     }
 
     .separator-includes {
       list-style: none;
       padding: 0;
+      max-width: 440px;
+      margin: 0 auto;
+      text-align: left;
+      color: #B8B4AC;
+    }
+
+    .separator-includes li {
+      font-size: 15px;
       display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-      color: #8A8880;
+      align-items: center;
+      gap: 12px;
+      padding: 6px 0;
     }
 
     .separator-includes li::before {
-      content: "✦ ";
-      color: #2A9E8F;
+      content: '✦';
+      color: var(--teal);
+      font-size: 10px;
+      flex-shrink: 0;
     }
 
     /* ─── FOOTER ─── */
