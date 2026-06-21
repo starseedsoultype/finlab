@@ -81,7 +81,8 @@
 
   <div class="grid g3" style="margin-top:10px">
     <div class="metric"><p class="l">Коинов</p><p class="v gold" id="m-coins">0</p></div>
-    <div class="metric"><p class="l">Заработано, ₽</p><p class="v tealc" id="m-earned">0</p></div>
+    <div class="metric"><p class="l">Доход вручную, ₽</p><p class="v tealc" id="m-earned">0</p></div>
+    <div class="metric"><p class="l">Оплаты авто, ₽</p><p class="v tealc" id="m-auto">0</p></div>
     <div class="metric"><p class="l">Расходы, ₽</p><p class="v" id="m-spent">0</p></div>
     <div class="metric"><p class="l">Чистыми, ₽</p><p class="v" id="m-net">0</p></div>
     <div class="metric"><p class="l">Действий</p><p class="v" id="m-acts">0</p></div>
@@ -379,6 +380,7 @@ function rollover(s){
 let STATE = defaultState();
 let PW = localStorage.getItem('fl_pw') || '';
 let saveTimer = null;
+let AUTO_INCOME = 0;
 
 function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1400);}
 
@@ -388,7 +390,7 @@ async function cloudGet(){
     const r=await fetch(FN_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:PW,action:'get'})});
     if(r.status===401){toast('Неверный пароль');return null;}
     if(!r.ok) return null;
-    const j=await r.json(); setCloud(true); return j.data;
+    const j=await r.json(); AUTO_INCOME=Number(j.income)||0; setCloud(true); return j.data;
   }catch(_){ return null; }
 }
 async function cloudSave(){
@@ -411,17 +413,19 @@ function persist(){
 
 function render(){
   const goalRub=STATE.goalThb*STATE.fx;
-  const pct=goalRub>0?Math.min(100,STATE.earned/goalRub*100):0;
+  const total=(STATE.earned||0)+AUTO_INCOME;
+  const pct=goalRub>0?Math.min(100,total/goalRub*100):0;
   document.getElementById('fill').style.width=pct.toFixed(1)+'%';
   document.getElementById('pct').textContent=pct.toFixed(1)+'%';
-  document.getElementById('earned-line').textContent=nf.format(Math.round(STATE.earned))+' ₽ из '+nf.format(Math.round(goalRub))+' ₽';
-  const leftThb=Math.max(0,STATE.goalThb-STATE.earned/STATE.fx);
+  document.getElementById('earned-line').textContent=nf.format(Math.round(total))+' ₽ из '+nf.format(Math.round(goalRub))+' ₽';
+  const leftThb=Math.max(0,STATE.goalThb-total/STATE.fx);
   document.getElementById('left-line').textContent='осталось '+nf.format(Math.round(leftThb))+' ฿';
   document.getElementById('sub-left').textContent='цель '+nf.format(STATE.goalThb)+' ฿ · курс '+STATE.fx+' ₽';
   document.getElementById('m-coins').textContent=nf.format(STATE.coins);
-  document.getElementById('m-earned').textContent=nf.format(Math.round(STATE.earned));
-  document.getElementById('m-spent').textContent=nf.format(Math.round(STATE.spent));
-  document.getElementById('m-net').textContent=nf.format(Math.round(STATE.earned-STATE.spent));
+  document.getElementById('m-earned').textContent=nf.format(Math.round(STATE.earned||0));
+  document.getElementById('m-auto').textContent=nf.format(Math.round(AUTO_INCOME));
+  document.getElementById('m-spent').textContent=nf.format(Math.round(STATE.spent||0));
+  document.getElementById('m-net').textContent=nf.format(Math.round(total-(STATE.spent||0)));
   document.getElementById('m-acts').textContent=nf.format(STATE.acts);
   document.getElementById('m-people').textContent=nf.format(STATE.people);
   document.querySelectorAll('[data-rwbtn]').forEach(b=>{b.disabled=STATE.coins<parseInt(b.dataset.cost);});
