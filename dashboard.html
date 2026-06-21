@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FINLAB · Путь к 2 000 000 ฿</title>
+<link rel="icon" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Manrope:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --teal:#2A9E8F; --teal-light:#3BBFAE; --pink:#E05B78;
+    --bg:#0D0F14; --section:#141720; --card:#1A1E2A;
+    --text:#E8E4DC; --muted:#8A8880; --gold:#C9A96E;
+    --line:rgba(255,255,255,.07);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:20px 16px 64px}
+  h1,h2,h3,.jost{font-family:'Jost',sans-serif;font-weight:500}
+  h1{font-size:22px;margin:0}
+  .sub{color:var(--muted);font-size:13px;margin:2px 0 0}
+  .sec{font-family:'Jost',sans-serif;font-size:15px;color:var(--gold);margin:28px 0 12px;letter-spacing:.3px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .grid{display:grid;gap:10px}
+  .g2{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+  .g3{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
+  .bartrack{height:20px;background:#0a0c10;border-radius:999px;overflow:hidden;margin:14px 0 8px;border:1px solid var(--line)}
+  .barfill{height:100%;width:0%;background:linear-gradient(90deg,var(--teal),var(--teal-light));border-radius:999px;transition:width .4s}
+  .metric{background:var(--section);border-radius:12px;padding:12px 14px}
+  .metric .l{font-size:12px;color:var(--muted);margin:0 0 4px}
+  .metric .v{font-family:'Jost',sans-serif;font-size:22px;margin:0}
+  .gold{color:var(--gold)} .tealc{color:var(--teal-light)} .muted{color:var(--muted)}
+  .mis{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--section);border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin-bottom:8px}
+  .mis .name{font-size:15px}
+  .mis .meta{font-size:12px;color:var(--muted);margin-top:1px}
+  button{font-family:'Manrope',sans-serif;cursor:pointer;border-radius:10px;border:1px solid var(--line);background:#222634;color:var(--text);font-size:13px;padding:8px 13px;transition:.15s}
+  button:hover{border-color:var(--teal)}
+  button:active{transform:scale(.97)}
+  button:disabled{opacity:.35;cursor:not-allowed}
+  .btn-do{background:rgba(42,158,143,.16);border-color:rgba(42,158,143,.4);color:var(--teal-light);white-space:nowrap}
+  .rw{background:var(--section);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center}
+  .rw .t{font-size:14px;margin:0 0 2px}
+  .rw .c{font-size:12px;color:var(--gold);margin:0 0 10px}
+  input,select{font-family:'Manrope',sans-serif;background:#0a0c10;border:1px solid var(--line);color:var(--text);border-radius:9px;padding:8px 10px;font-size:14px;width:100%}
+  input:focus,select:focus{outline:none;border-color:var(--teal)}
+  .field{display:flex;flex-direction:column;gap:4px}
+  .field .lbl{font-size:12px;color:var(--muted)}
+  .pill{font-size:11px;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+  .pill.ok{color:var(--teal-light);border-color:rgba(42,158,143,.4)}
+  details summary{cursor:pointer;color:var(--muted);font-size:13px;list-style:none}
+  details summary::-webkit-details-marker{display:none}
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--teal);color:#06231e;font-size:13px;padding:8px 16px;border-radius:999px;opacity:0;transition:.25s;pointer-events:none}
+  .toast.show{opacity:1}
+  .streak{color:var(--gold);font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="row">
+    <div>
+      <h1>Путь к 2 000 000 ฿</h1>
+      <p class="sub" id="sub-left">—</p>
+    </div>
+    <span class="pill" id="cloud">офлайн</span>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="row">
+      <span class="jost" style="font-size:15px">Заработано к цели</span>
+      <span class="jost gold" id="pct" style="font-size:18px">0%</span>
+    </div>
+    <div class="bartrack"><div class="barfill" id="fill"></div></div>
+    <div class="row" style="font-size:12px;color:var(--muted)">
+      <span id="earned-line">0 ₽</span>
+      <span id="left-line">осталось 2 000 000 ฿</span>
+    </div>
+  </div>
+
+  <div class="grid g3" style="margin-top:10px">
+    <div class="metric"><p class="l">Коинов</p><p class="v gold" id="m-coins">0</p></div>
+    <div class="metric"><p class="l">Заработано, ₽</p><p class="v tealc" id="m-earned">0</p></div>
+    <div class="metric"><p class="l">Расходы, ₽</p><p class="v" id="m-spent">0</p></div>
+    <div class="metric"><p class="l">Чистыми, ₽</p><p class="v" id="m-net">0</p></div>
+    <div class="metric"><p class="l">Действий</p><p class="v" id="m-acts">0</p></div>
+    <div class="metric"><p class="l">Людей в системе</p><p class="v" id="m-people">0</p></div>
+  </div>
+
+  <div class="sec">Доход — двигает полоску к цели</div>
+  <div class="card">
+    <div class="grid" style="grid-template-columns:1fr;gap:10px">
+      <div class="field">
+        <span class="lbl">Что пришло</span>
+        <select id="inc-type"></select>
+      </div>
+      <div class="row" style="gap:10px">
+        <div class="field" style="flex:1">
+          <span class="lbl">Сумма, ₽</span>
+          <input type="number" id="inc-amount" step="100">
+        </div>
+        <button class="btn-do" id="inc-add" style="align-self:flex-end;height:38px">Записать приход</button>
+      </div>
+      <div class="row" style="gap:10px">
+        <div class="field" style="flex:1">
+          <span class="lbl">Расход (реклама и пр.), ₽</span>
+          <input type="number" id="exp-amount" step="100">
+        </div>
+        <button id="exp-add" style="align-self:flex-end;height:38px">Записать расход</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">Рост — строит аудиторию (коины)</div>
+  <div id="grp-growth"></div>
+
+  <div class="sec">Развитие и работа</div>
+  <div id="grp-work"></div>
+
+  <div class="sec">Ресурс себя — недельный ритм</div>
+  <div id="grp-resource"></div>
+
+  <div class="sec">Награды — меняешь коины на реальное</div>
+  <div class="grid g3" id="grp-rewards"></div>
+
+  <div class="sec">Настройки</div>
+  <details class="card">
+    <summary>Цель, курс, подключение облака, сброс</summary>
+    <div class="grid g2" style="margin-top:12px">
+      <div class="field"><span class="lbl">Цель, ฿</span><input type="number" id="set-goal" step="50000"></div>
+      <div class="field"><span class="lbl">Курс ฿ → ₽</span><input type="number" id="set-fx" step="0.05"></div>
+      <div class="field"><span class="lbl">Людей в системе (валидация)</span><input type="number" id="set-people"></div>
+      <div class="field"><span class="lbl">Пароль облака</span><input type="password" id="set-pw" placeholder="чтобы синхронизировать"></div>
+    </div>
+    <div class="row" style="margin-top:12px;justify-content:flex-start;gap:8px">
+      <button id="cloud-connect">Подключить облако</button>
+      <button id="reset-all" style="border-color:rgba(224,91,120,.4);color:var(--pink)">Сбросить всё</button>
+    </div>
+    <p class="sub" style="margin-top:10px">Облако синхронизирует прогресс между телефоном и ноутом. Без пароля всё хранится локально на этом устройстве.</p>
+  </details>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const FN_URL = "https://ogqtywdsplyqwfznqxnu.supabase.co/functions/v1/finlab-tracker";
+const nf = new Intl.NumberFormat('ru-RU');
+
+const GROWTH = [
+  {id:'reel',   label:'Рилс',                 coins:50,  note:'снято'},
+  {id:'yt',     label:'YouTube длинный',      coins:120, note:'снято'},
+  {id:'ads',    label:'Реклама — запуск/учёба',coins:100, note:'раз'},
+  {id:'collab', label:'Партнёрство / эфир',   coins:150, note:'раз'},
+  {id:'warmup', label:'Прогрев-пост / рассылка',coins:40, note:'раз'},
+  {id:'reviews',label:'Собрала отзыв / кейс', coins:60,  note:'шт'},
+];
+const WORK = [
+  {id:'edu',    label:'Моё обучение',          coins:40, note:'раз'},
+  {id:'product',label:'Доработка продукта (бот, лендинг, каналы)',coins:80,note:'раз'},
+  {id:'nails',  label:'Маникюр (для контента)',coins:80, note:'раз'},
+  {id:'pedi',   label:'Педикюр (для контента)',coins:80, note:'раз'},
+  {id:'hair',   label:'Покраска волос',        coins:80, note:'раз'},
+  {id:'lashes', label:'Реснички',              coins:80, note:'раз'},
+];
+const RESOURCE = [
+  {id:'reading',label:'Чтение 30 мин',  coins:30, target:7, unit:'дн/нед'},
+  {id:'gym',    label:'Спортзал',       coins:60, target:3, unit:'раз/нед'},
+  {id:'massage',label:'Массаж',         coins:80, target:1, unit:'раз/нед'},
+];
+const INCOME = [
+  {id:'session',  label:'Личная сессия — 6 000 ₽',   amount:6000, coins:200},
+  {id:'course_e', label:'Курс, ранняя — 5 555 ₽',    amount:5555, coins:180},
+  {id:'course_m', label:'Курс, основная — 7 777 ₽',  amount:7777, coins:180},
+  {id:'pair',     label:'Пара — 2 777 ₽',            amount:2777, coins:120},
+  {id:'evergreen',label:'В своём темпе — 1 111 ₽',   amount:1111, coins:60},
+  {id:'other',    label:'Другое',                    amount:0,    coins:100},
+];
+const REWARDS = [
+  {id:'massage2',label:'Экстра-массаж',   cost:600},
+  {id:'shopping',label:'Шоппинг',         cost:900},
+  {id:'spa',     label:'Спа-день целиком',cost:1200},
+  {id:'dinner',  label:'Ужин у моря',     cost:400},
+  {id:'weekend', label:'Выходные — смена обстановки',cost:2000},
+];
+
+function weekKey(d){
+  const dt=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+  const day=dt.getUTCDay()||7; dt.setUTCDate(dt.getUTCDate()+4-day);
+  const ys=new Date(Date.UTC(dt.getUTCFullYear(),0,1));
+  const wk=Math.ceil((((dt-ys)/86400000)+1)/7);
+  return dt.getUTCFullYear()+'-W'+String(wk).padStart(2,'0');
+}
+function defaultState(){
+  const c={}; [...GROWTH,...WORK].forEach(m=>c[m.id]=0);
+  return {goalThb:2000000,fx:2.6,earned:0,spent:0,coins:0,acts:0,people:0,
+    counts:c,
+    resource:{week:weekKey(new Date()),reading:0,gym:0,massage:0,streak:{reading:0,gym:0,massage:0}}};
+}
+function rollover(s){
+  const wk=weekKey(new Date());
+  if(s.resource.week!==wk){
+    RESOURCE.forEach(h=>{
+      s.resource.streak[h.id] = (s.resource[h.id]||0) >= h.target ? (s.resource.streak[h.id]||0)+1 : 0;
+      s.resource[h.id]=0;
+    });
+    s.resource.week=wk; return true;
+  }
+  return false;
+}
+
+let STATE = defaultState();
+let PW = localStorage.getItem('fl_pw') || '';
+let saveTimer = null;
+
+function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1400);}
+
+async function cloudGet(){
+  if(!PW) return null;
+  try{
+    const r=await fetch(FN_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:PW,action:'get'})});
+    if(r.status===401){toast('Неверный пароль');return null;}
+    if(!r.ok) return null;
+    const j=await r.json(); setCloud(true); return j.data;
+  }catch(_){ return null; }
+}
+async function cloudSave(){
+  if(!PW) return;
+  try{
+    const r=await fetch(FN_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:PW,action:'save',data:STATE})});
+    setCloud(r.ok);
+  }catch(_){ setCloud(false); }
+}
+function setCloud(ok){
+  const el=document.getElementById('cloud');
+  if(!PW){el.textContent='локально';el.className='pill';return;}
+  el.textContent=ok?'синхронизировано':'нет связи';
+  el.className='pill'+(ok?' ok':'');
+}
+function persist(){
+  localStorage.setItem('fl_state',JSON.stringify(STATE));
+  clearTimeout(saveTimer); saveTimer=setTimeout(cloudSave,700);
+}
+
+function render(){
+  const goalRub=STATE.goalThb*STATE.fx;
+  const pct=goalRub>0?Math.min(100,STATE.earned/goalRub*100):0;
+  document.getElementById('fill').style.width=pct.toFixed(1)+'%';
+  document.getElementById('pct').textContent=pct.toFixed(1)+'%';
+  document.getElementById('earned-line').textContent=nf.format(Math.round(STATE.earned))+' ₽ из '+nf.format(Math.round(goalRub))+' ₽';
+  const leftThb=Math.max(0,STATE.goalThb-STATE.earned/STATE.fx);
+  document.getElementById('left-line').textContent='осталось '+nf.format(Math.round(leftThb))+' ฿';
+  document.getElementById('sub-left').textContent='цель '+nf.format(STATE.goalThb)+' ฿ · курс '+STATE.fx+' ₽';
+  document.getElementById('m-coins').textContent=nf.format(STATE.coins);
+  document.getElementById('m-earned').textContent=nf.format(Math.round(STATE.earned));
+  document.getElementById('m-spent').textContent=nf.format(Math.round(STATE.spent));
+  document.getElementById('m-net').textContent=nf.format(Math.round(STATE.earned-STATE.spent));
+  document.getElementById('m-acts').textContent=nf.format(STATE.acts);
+  document.getElementById('m-people').textContent=nf.format(STATE.people);
+  document.querySelectorAll('[data-rwbtn]').forEach(b=>{b.disabled=STATE.coins<parseInt(b.dataset.cost);});
+  [...GROWTH,...WORK].forEach(m=>{const e=document.getElementById('cnt-'+m.id); if(e)e.textContent=STATE.counts[m.id]||0;});
+  RESOURCE.forEach(h=>{
+    const e=document.getElementById('res-'+h.id);
+    if(e){const c=STATE.resource[h.id]||0; const st=STATE.resource.streak[h.id]||0;
+      e.innerHTML='эта неделя '+c+'/'+h.target+' '+h.unit+(st>0?' · <span class="streak">серия '+st+' нед</span>':'');}
+  });
+}
+
+function logMission(m){STATE.counts[m.id]=(STATE.counts[m.id]||0)+1;STATE.coins+=m.coins;STATE.acts++;persist();render();toast('+'+m.coins+' коинов');}
+function logResource(h){STATE.resource[h.id]=(STATE.resource[h.id]||0)+1;STATE.coins+=h.coins;STATE.acts++;persist();render();toast('+'+h.coins+' коинов');}
+
+function buildMissions(containerId,list){
+  const wrap=document.getElementById(containerId);
+  wrap.innerHTML='';
+  list.forEach(m=>{
+    const d=document.createElement('div'); d.className='mis';
+    d.innerHTML='<div><div class="name">'+m.label+'</div><div class="meta"><span id="cnt-'+m.id+'">0</span> '+m.note+' · +'+m.coins+' коинов</div></div>';
+    const b=document.createElement('button'); b.className='btn-do'; b.textContent='Отметить';
+    b.onclick=()=>logMission(m); d.appendChild(b); wrap.appendChild(d);
+  });
+}
+function buildResource(){
+  const wrap=document.getElementById('grp-resource'); wrap.innerHTML='';
+  RESOURCE.forEach(h=>{
+    const d=document.createElement('div'); d.className='mis';
+    d.innerHTML='<div><div class="name">'+h.label+'</div><div class="meta" id="res-'+h.id+'">—</div></div>';
+    const b=document.createElement('button'); b.className='btn-do'; b.textContent='Сделала';
+    b.onclick=()=>logResource(h); d.appendChild(b); wrap.appendChild(d);
+  });
+}
+function buildRewards(){
+  const wrap=document.getElementById('grp-rewards'); wrap.innerHTML='';
+  REWARDS.forEach(r=>{
+    const d=document.createElement('div'); d.className='rw';
+    d.innerHTML='<p class="t">'+r.label+'</p><p class="c">'+r.cost+' коинов</p>';
+    const b=document.createElement('button'); b.textContent='Получить'; b.dataset.rwbtn='1'; b.dataset.cost=r.cost;
+    b.onclick=()=>{if(STATE.coins>=r.cost){STATE.coins-=r.cost;persist();render();toast('Заслужено 🌿');}};
+    d.appendChild(b); wrap.appendChild(d);
+  });
+}
+function buildIncome(){
+  const sel=document.getElementById('inc-type'); sel.innerHTML='';
+  INCOME.forEach(i=>{const o=document.createElement('option');o.value=i.id;o.textContent=i.label;sel.appendChild(o);});
+  function fill(){const i=INCOME.find(x=>x.id===sel.value);document.getElementById('inc-amount').value=i.amount||'';}
+  sel.onchange=fill; fill();
+  document.getElementById('inc-add').onclick=()=>{
+    const i=INCOME.find(x=>x.id===sel.value);
+    const amt=parseFloat(document.getElementById('inc-amount').value)||0;
+    if(amt<=0){toast('Введи сумму');return;}
+    STATE.earned+=amt; STATE.coins+=i.coins; STATE.acts++; persist(); render(); toast('+'+nf.format(amt)+' ₽');
+  };
+  document.getElementById('exp-add').onclick=()=>{
+    const amt=parseFloat(document.getElementById('exp-amount').value)||0;
+    if(amt<=0){toast('Введи сумму');return;}
+    STATE.spent+=amt; STATE.acts++; document.getElementById('exp-amount').value=''; persist(); render(); toast('Расход записан');
+  };
+}
+
+function bindSettings(){
+  const g=document.getElementById('set-goal'),fx=document.getElementById('set-fx'),pp=document.getElementById('set-people'),pw=document.getElementById('set-pw');
+  g.value=STATE.goalThb; fx.value=STATE.fx; pp.value=STATE.people; pw.value=PW;
+  g.oninput=()=>{STATE.goalThb=parseFloat(g.value)||0;persist();render();};
+  fx.oninput=()=>{STATE.fx=parseFloat(fx.value)||1;persist();render();};
+  pp.oninput=()=>{STATE.people=parseInt(pp.value)||0;persist();render();};
+  document.getElementById('cloud-connect').onclick=async()=>{
+    PW=pw.value.trim(); localStorage.setItem('fl_pw',PW);
+    const cloud=await cloudGet();
+    if(cloud){STATE=migrate(cloud);rollover(STATE);persist();render();bindSettings();toast('Облако подключено');}
+    else if(PW){setCloud(false);} else setCloud(true);
+  };
+  document.getElementById('reset-all').onclick=()=>{
+    if(confirm('Сбросить весь прогресс? Это нельзя отменить.')){STATE=defaultState();persist();render();bindSettings();toast('Сброшено');}
+  };
+}
+function migrate(s){const d=defaultState();return Object.assign(d,s,{counts:Object.assign(d.counts,s.counts||{}),resource:Object.assign(d.resource,s.resource||{})});}
+
+async function init(){
+  const local=localStorage.getItem('fl_state');
+  if(local){try{STATE=migrate(JSON.parse(local));}catch(_){}}
+  if(PW){const cloud=await cloudGet(); if(cloud)STATE=migrate(cloud);}
+  rollover(STATE);
+  buildMissions('grp-growth',GROWTH);
+  buildMissions('grp-work',WORK);
+  buildResource(); buildRewards(); buildIncome(); bindSettings();
+  setCloud(!!PW); render(); persist();
+}
+init();
+</script>
+</body>
+</html>
