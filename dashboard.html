@@ -124,6 +124,13 @@
   <div class="sec">Награды — меняешь коины на реальное</div>
   <div class="grid g3" id="grp-rewards"></div>
 
+  <div class="sec">Контент-календарь — 90 рилсов + YouTube</div>
+  <div class="card" style="margin-bottom:10px">
+    <div class="row"><span class="jost" style="font-size:15px">Опубликовано</span><span class="jost gold" id="cal-progress">Рилсы 0/90 · YouTube 0/6</span></div>
+    <p class="sub" style="margin-top:6px">Сняла и выложила — нажми строку. Закроется план, капнут коины, отметится миссия «Рилс». Полные сценарии — в файле Reels_90_FINLAB_golos.md.</p>
+  </div>
+  <div id="grp-calendar"></div>
+
   <div class="sec">Настройки</div>
   <details class="card">
     <summary>Цель, курс, подключение облака, сброс</summary>
@@ -184,6 +191,160 @@ const REWARDS = [
   {id:'weekend', label:'Выходные — смена обстановки',cost:2000},
 ];
 
+const PLAN_REELS = [
+  {id:'d1-mak',s:'МАК',d:1,h:'Выбери карту — что тихо держит твой доход'},
+  {id:'d1-prov',s:'Провокация',d:1,h:'Ты ужимаешься не потому, что денег мало'},
+  {id:'d1-hist',s:'История',d:1,h:'Мой путь от нуля: один честный разговор с собой'},
+  {id:'d2-mak',s:'МАК',d:2,h:'Выбери карту — какая эмоция стоит между тобой и деньгами'},
+  {id:'d2-prov',s:'Провокация',d:2,h:'Аффирмации про деньги не работают — вот честная причина'},
+  {id:'d2-hist',s:'История',d:2,h:'Момент, после которого я перестала бояться больших чеков'},
+  {id:'d3-mak',s:'МАК',d:3,h:'Выбери карту — какой ресурс у тебя уже есть'},
+  {id:'d3-prov',s:'Провокация',d:3,h:'Дело не в деньгах, а в том, кому ты не разрешаешь себя обогнать'},
+  {id:'d3-hist',s:'История',d:3,h:'Клиентка пришла за доходом, а говорили о её маме'},
+  {id:'d4-mak',s:'МАК',d:4,h:'Выбери карту — что пора отпустить, чтобы стало легче'},
+  {id:'d4-prov',s:'Провокация',d:4,h:'Ты много работаешь, чтобы не чувствовать страх'},
+  {id:'d4-hist',s:'История',d:4,h:'Как я научилась называть цену без извинений'},
+  {id:'d5-mak',s:'МАК',d:5,h:'Выбери карту — что ты на самом деле хочешь, а не «надо»'},
+  {id:'d5-prov',s:'Провокация',d:5,h:'Бедность бывает удобной — скажу чем'},
+  {id:'d5-hist',s:'История',d:5,h:'Что я поняла про деньги после клинической смерти'},
+  {id:'d6-mak',s:'МАК',d:6,h:'Выбери карту — где ты сама себе ставишь потолок'},
+  {id:'d6-prov',s:'Провокация',d:6,h:'Тебе не лень — тебе страшно, что получится'},
+  {id:'d6-hist',s:'История',d:6,h:'Одна карта показала то, что годы терапии обходили'},
+  {id:'d7-mak',s:'МАК',d:7,h:'Выбери карту — что ты повторяешь за своей семьёй'},
+  {id:'d7-prov',s:'Провокация',d:7,h:'Скромность — не всегда добродетель, иногда это страх'},
+  {id:'d7-hist',s:'История',d:7,h:'Я годами «была удобной» — чего это стоило'},
+  {id:'d8-mak',s:'МАК',d:8,h:'Выбери карту — какая твоя сильная сторона в деньгах'},
+  {id:'d8-prov',s:'Провокация',d:8,h:'Ты ждёшь разрешения, которого никто не даст'},
+  {id:'d8-hist',s:'История',d:8,h:'Три вопроса, которые возвращают к своей цели'},
+  {id:'d9-mak',s:'МАК',d:9,h:'Выбери карту — что мешает назвать свою цену'},
+  {id:'d9-prov',s:'Провокация',d:9,h:'«Мне и так нормально» — самая дорогая фраза'},
+  {id:'d9-hist',s:'История',d:9,h:'Как я заметила, что живу чужой мечтой'},
+  {id:'d10-mak',s:'МАК',d:10,h:'Выбери карту — от чего ты устала сильнее, чем признаёшь'},
+  {id:'d10-prov',s:'Провокация',d:10,h:'Большие деньги пугают не суммой, а переменами'},
+  {id:'d10-hist',s:'История',d:10,h:'Почему я ушла из «стабильного» и не жалею'},
+  {id:'d11-mak',s:'МАК',d:11,h:'Выбери карту — что станет возможным, если разрешишь себе больше'},
+  {id:'d11-prov',s:'Провокация',d:11,h:'Ты сравниваешь себя и поэтому стоишь на месте'},
+  {id:'d11-hist',s:'История',d:11,h:'Что меняется, когда перестаёшь догонять чужой уровень'},
+  {id:'d12-mak',s:'МАК',d:12,h:'Выбери карту — какой шаг ты откладываешь'},
+  {id:'d12-prov',s:'Провокация',d:12,h:'Боишься назвать цену дороже? Это про право занимать место'},
+  {id:'d12-hist',s:'История',d:12,h:'Клиент удвоил доход, увидев свою скрытую выгоду'},
+  {id:'d13-mak',s:'МАК',d:13,h:'Выбери карту — что держит тебя в «привычно, но мало»'},
+  {id:'d13-prov',s:'Провокация',d:13,h:'Экономия из страха и забота о себе — разные вещи'},
+  {id:'d13-hist',s:'История',d:13,h:'Мой способ не застревать в страхе на годы'},
+  {id:'d14-mak',s:'МАК',d:14,h:'Выбери карту — какое решение ты давно избегаешь'},
+  {id:'d14-prov',s:'Провокация',d:14,h:'Ты не сливаешь деньги — ты что-то ими заглушаешь'},
+  {id:'d14-hist',s:'История',d:14,h:'Как я научилась просить и получать'},
+  {id:'d15-mak',s:'МАК',d:15,h:'Выбери карту — что тебе сейчас важнее денег'},
+  {id:'d15-prov',s:'Провокация',d:15,h:'Деньги не делают свободнее того, кто боится свободы'},
+  {id:'d15-hist',s:'История',d:15,h:'День, когда я разрешила себе хотеть большего'},
+  {id:'d16-mak',s:'МАК',d:16,h:'Выбери карту — где ты предаёшь свои интересы ради других'},
+  {id:'d16-prov',s:'Провокация',d:16,h:'«Потом» — это не план, а способ не начинать'},
+  {id:'d16-hist',s:'История',d:16,h:'Что я отвечаю себе, когда накрывает «не получится»'},
+  {id:'d17-mak',s:'МАК',d:17,h:'Выбери карту — что ты получаешь, оставаясь «маленькой»'},
+  {id:'d17-prov',s:'Провокация',d:17,h:'Ты держишься за привычное, даже когда оно обкрадывает'},
+  {id:'d17-hist',s:'История',d:17,h:'Маленькая привычка, что держит меня в ресурсе'},
+  {id:'d18-mak',s:'МАК',d:18,h:'Выбери карту — какая опора у тебя есть прямо сейчас'},
+  {id:'d18-prov',s:'Провокация',d:18,h:'Чужие цели тяжелее своих — проверь, чьи у тебя'},
+  {id:'d18-hist',s:'История',d:18,h:'Как отличить «хочу» от «надо» по телу'},
+  {id:'d19-mak',s:'МАК',d:19,h:'Выбери карту — что боишься потерять, став богаче'},
+  {id:'d19-prov',s:'Провокация',d:19,h:'Тебе разрешали меньше, чем ты можешь'},
+  {id:'d19-hist',s:'История',d:19,h:'Почему деньги пошли, когда я перестала себя стыдить'},
+  {id:'d20-mak',s:'МАК',d:20,h:'Выбери карту — какой твой следующий уровень'},
+  {id:'d20-prov',s:'Провокация',d:20,h:'Ты боишься не провала, а того, что заметят'},
+  {id:'d20-hist',s:'История',d:20,h:'Что я вижу у женщин, застрявших в деньгах'},
+  {id:'d21-mak',s:'МАК',d:21,h:'Выбери карту — что ты прячешь даже от себя'},
+  {id:'d21-prov',s:'Провокация',d:21,h:'Самооценка и доход — это одна линия'},
+  {id:'d21-hist',s:'История',d:21,h:'Как я переросла свой старый образ себя'},
+  {id:'d22-mak',s:'МАК',d:22,h:'Выбери карту — что мешает действовать, хотя всё понимаешь'},
+  {id:'d22-prov',s:'Провокация',d:22,h:'Ты откладываешь жизнь, будто будет вторая'},
+  {id:'d22-hist',s:'История',d:22,h:'Шаг, который я откладывала из страха — что было после'},
+  {id:'d23-mak',s:'МАК',d:23,h:'Выбери карту — что ты делаешь из страха, а не из выбора'},
+  {id:'d23-prov',s:'Провокация',d:23,h:'Не цель большая — ты к ней ещё не привыкла'},
+  {id:'d23-hist',s:'История',d:23,h:'Как я перестала сравнивать и начала замечать своё'},
+  {id:'d24-mak',s:'МАК',d:24,h:'Выбери карту — какой образ себя ты переросла'},
+  {id:'d24-prov',s:'Провокация',d:24,h:'Ты не принимаешь деньги, как не принимаешь комплименты'},
+  {id:'d24-hist',s:'История',d:24,h:'Что помогает мне, когда хочется всё бросить'},
+  {id:'d25-mak',s:'МАК',d:25,h:'Выбери карту — что говорит твоё тело про деньги (сигнал, не магия)'},
+  {id:'d25-prov',s:'Провокация',d:25,h:'Комфорт — не безопасность, иногда это клетка'},
+  {id:'d25-hist',s:'История',d:25,h:'Почему я не обещаю «деньги придут сами»'},
+  {id:'d26-mak',s:'МАК',d:26,h:'Выбери карту — какую роль ты играешь в своих финансах'},
+  {id:'d26-prov',s:'Провокация',d:26,h:'Ты можешь больше, чем тебе однажды сказали'},
+  {id:'d26-hist',s:'История',d:26,h:'Как клиентка увидела, что охраняет бедность семьи'},
+  {id:'d27-mak',s:'МАК',d:27,h:'Выбери карту — что мешает тебе просить'},
+  {id:'d27-prov',s:'Провокация',d:27,h:'Зарабатывать больше мамы бывает страшнее, чем кажется'},
+  {id:'d27-hist',s:'История',d:27,h:'Что я поняла про достаток, начиная с нуля у моря'},
+  {id:'d28-mak',s:'МАК',d:28,h:'Выбери карту — что станет возможным через год, если начать сейчас'},
+  {id:'d28-prov',s:'Провокация',d:28,h:'Деньги — про честность с собой, а не про «мышление богатства»'},
+  {id:'d28-hist',s:'История',d:28,h:'Кем я становлюсь, когда у меня достаточно'},
+  {id:'d29-mak',s:'МАК',d:29,h:'Выбери карту — что ты охраняешь, не давая себе зарабатывать'},
+  {id:'d29-prov',s:'Провокация',d:29,h:'«Я подумаю» про цель — часто вежливое «я боюсь»'},
+  {id:'d29-hist',s:'История',d:29,h:'Кейс: пришла за доходом, нашла, чего хочет'},
+  {id:'d30-mak',s:'МАК',d:30,h:'Выбери карту — кто ты, когда у тебя достаточно'},
+  {id:'d30-prov',s:'Провокация',d:30,h:'Никто не скажет «тебе можно больше» — это говоришь ты'},
+  {id:'d30-hist',s:'История',d:30,h:'Итог месяца: что во мне изменилось за 30 дней съёмок'},
+];
+
+const PLAN_YT = [
+  {id:'yt1',t:'Как пробить финансовый потолок: психология денег без эзотерики'},
+  {id:'yt2',t:'Почему аффирмации и медитации на деньги не работают'},
+  {id:'yt3',t:'Скрытые выгоды бедности: зачем мы держим свой потолок'},
+  {id:'yt4',t:'Истинные желания против чужих целей'},
+  {id:'yt5',t:'Стыд и деньги: перестать бояться быть богаче окружения'},
+  {id:'yt6',t:'Моя история: что я поняла про деньги после клинической смерти'},
+];
+
+function calCount(list){let n=0;list.forEach(it=>{if(STATE.calendar&&STATE.calendar[it.id])n++;});return n;}
+
+function calRow(it,type,reward){
+  const r=document.createElement('div'); r.className='calrow'; r.dataset.id=it.id;
+  r.style.cssText='display:flex;gap:10px;align-items:flex-start;padding:8px 0;cursor:pointer;border-top:1px solid var(--line)';
+  r.innerHTML='<span class="calcheck" style="color:var(--muted);flex-shrink:0">○</span>'+
+    '<span style="font-size:11px;color:var(--gold);flex-shrink:0;white-space:nowrap">'+it.s+'</span>'+
+    '<span class="calhook" style="font-size:13px;flex:1">'+it.h+'</span>';
+  r.onclick=()=>toggleCal(it.id,type,reward);
+  return r;
+}
+
+function buildCalendar(){
+  const wrap=document.getElementById('grp-calendar'); if(!wrap) return; wrap.innerHTML='';
+  let day=0, inner=null;
+  PLAN_REELS.forEach(it=>{
+    if(it.d!==day){
+      day=it.d;
+      const card=document.createElement('div'); card.className='card'; card.style.marginBottom='8px'; card.style.padding='12px 14px';
+      const head=document.createElement('div'); head.className='jost'; head.style.color='var(--gold)'; head.style.marginBottom='4px'; head.textContent='День '+day;
+      card.appendChild(head); inner=document.createElement('div'); card.appendChild(inner); wrap.appendChild(card);
+    }
+    inner.appendChild(calRow(it,'reel',50));
+  });
+  const yc=document.createElement('div'); yc.className='card'; yc.style.marginTop='14px'; yc.style.padding='12px 14px';
+  const yh=document.createElement('div'); yh.className='jost'; yh.style.color='var(--gold)'; yh.style.marginBottom='4px'; yh.textContent='YouTube — 6 видео';
+  yc.appendChild(yh); const yi=document.createElement('div'); yc.appendChild(yi);
+  PLAN_YT.forEach(it=>{ yi.appendChild(calRow({id:it.id,s:'YouTube',h:it.t},'yt',120)); });
+  wrap.appendChild(yc);
+}
+
+function toggleCal(id,type,reward){
+  if(STATE.calendar[id]){
+    delete STATE.calendar[id]; STATE.coins-=reward; STATE.counts[type]=Math.max(0,(STATE.counts[type]||0)-1); STATE.acts=Math.max(0,STATE.acts-1);
+  }else{
+    STATE.calendar[id]=true; STATE.coins+=reward; STATE.counts[type]=(STATE.counts[type]||0)+1; STATE.acts++;
+    toast('+'+reward+' коинов');
+  }
+  persist(); render();
+}
+
+function renderCalendar(){
+  document.querySelectorAll('.calrow').forEach(r=>{
+    const done=!!(STATE.calendar&&STATE.calendar[r.dataset.id]);
+    const chk=r.querySelector('.calcheck'); const hook=r.querySelector('.calhook');
+    chk.textContent=done?'✓':'○'; chk.style.color=done?'var(--teal-light)':'var(--muted)';
+    hook.style.textDecoration=done?'line-through':'none'; hook.style.opacity=done?'.5':'1';
+  });
+  const el=document.getElementById('cal-progress');
+  if(el) el.textContent='Рилсы '+calCount(PLAN_REELS)+'/90 · YouTube '+calCount(PLAN_YT)+'/6';
+}
+
 function weekKey(d){
   const dt=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
   const day=dt.getUTCDay()||7; dt.setUTCDate(dt.getUTCDate()+4-day);
@@ -195,7 +356,8 @@ function defaultState(){
   const c={}; [...GROWTH,...WORK].forEach(m=>c[m.id]=0);
   return {goalThb:2000000,fx:2.6,earned:0,spent:0,coins:0,acts:0,people:0,
     counts:c,
-    resource:{week:weekKey(new Date()),reading:0,gym:0,massage:0,streak:{reading:0,gym:0,massage:0}}};
+    resource:{week:weekKey(new Date()),reading:0,gym:0,massage:0,streak:{reading:0,gym:0,massage:0}},
+    calendar:{}};
 }
 function rollover(s){
   const wk=weekKey(new Date());
@@ -264,6 +426,7 @@ function render(){
     if(e){const c=STATE.resource[h.id]||0; const st=STATE.resource.streak[h.id]||0;
       e.innerHTML='эта неделя '+c+'/'+h.target+' '+h.unit+(st>0?' · <span class="streak">серия '+st+' нед</span>':'');}
   });
+  renderCalendar();
 }
 
 function logMission(m){STATE.counts[m.id]=(STATE.counts[m.id]||0)+1;STATE.coins+=m.coins;STATE.acts++;persist();render();toast('+'+m.coins+' коинов');}
@@ -341,7 +504,7 @@ async function init(){
   rollover(STATE);
   buildMissions('grp-growth',GROWTH);
   buildMissions('grp-work',WORK);
-  buildResource(); buildRewards(); buildIncome(); bindSettings();
+  buildResource(); buildRewards(); buildIncome(); buildCalendar(); bindSettings();
   setCloud(!!PW); render(); persist();
 }
 init();
