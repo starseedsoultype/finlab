@@ -406,6 +406,19 @@
 
     .activate-btn:hover { border-color: var(--teal); color: var(--teal); }
 
+    .delete-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 11px;
+      padding: 3px 9px;
+      margin-left: 4px;
+      transition: all 0.2s;
+    }
+    .delete-btn:hover { border-color: var(--red); color: var(--red); }
+
     /* ── MANUAL ACTIVATE ── */
     .manual-panel {
       background: var(--card);
@@ -924,6 +937,10 @@
       const channel = isVK ? 'VK' : 'TG';
       const idValue = isVK ? p.vk_id : (p.telegram_id ?? '—');
       const activateId = isVK ? ('vk' + p.vk_id) : p.telegram_id;
+      const trackLabel = p.track === 'live' ? 'Живой' : 'Свой темп';
+      const price = (p.price != null) ? `${Number(p.price).toLocaleString('ru-RU')} ₽` : '—';
+      const stream = p.live_date ? new Date(p.live_date).toLocaleDateString('ru-RU') : '—';
+      const label = p.username ? ('@' + p.username) : String(idValue);
       let activateBtn = '';
       if (activateId) {
         if (status === 'dropped') {
@@ -934,14 +951,20 @@
           activateBtn = `<button class="activate-btn" onclick="quickActivate('${activateId}')">Активировать</button>`;
         }
       }
+      const deleteBtn = activateId
+        ? `<button class="delete-btn" onclick="quickDelete('${activateId}', ${JSON.stringify(label)})">Удалить</button>`
+        : '';
       return `<tr>
         <td>${channel}</td>
         <td>${idValue}</td>
         <td>${p.username ? '@' + p.username : '—'}</td>
         <td>${badge}</td>
+        <td>${trackLabel}</td>
         <td>${status === 'active' || status === 'completed' ? (p.current_day ?? 1) : '—'}</td>
+        <td>${price}</td>
+        <td>${stream}</td>
         <td>${paidAt}</td>
-        <td>${activateBtn}</td>
+        <td>${activateBtn}${deleteBtn}</td>
       </tr>`;
     }).join('');
 
@@ -953,7 +976,10 @@
             <th>ID</th>
             <th>Username</th>
             <th>Статус</th>
+            <th>Формат</th>
             <th>День</th>
+            <th>Цена</th>
+            <th>Поток</th>
             <th>Оплата</th>
             <th></th>
           </tr>
@@ -982,6 +1008,18 @@
     const data = await apiCall('restore', { identifier: String(identifier) });
     if (data?.ok) {
       showToast('Возвращена в курс', 'success');
+      loadParticipants();
+      refreshStats();
+    } else {
+      showToast(data?.error ?? 'Ошибка', 'error');
+    }
+  }
+
+  async function quickDelete(identifier, label) {
+    if (!confirm(`Точно удалить ${label}? Это удалит и её ответы. Действие необратимо.`)) return;
+    const data = await apiCall('delete_participant', { identifier: String(identifier) });
+    if (data?.ok) {
+      showToast('Удалена', 'success');
       loadParticipants();
       refreshStats();
     } else {

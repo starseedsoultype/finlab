@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ФИНЛАБ — 7 дней исследования финансовой цели через МАК-карты</title>
-  <meta name="description" content="Живая онлайн-лаборатория с Олесей Бриз. 15–21 июля 2026. Исследуй свою финансовую цель через метафорические карты." />
+  <meta name="description" content="Живая онлайн-лаборатория с Олесей Бриз. Новый поток на каждое новолуние. Исследуй свою финансовую цель через метафорические карты." />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="apple-touch-icon" href="favicon.svg" />
   <meta name="theme-color" content="#06110f" />
@@ -848,7 +848,7 @@
     <canvas id="hero-canvas"></canvas>
     <h1>ФИНЛАБ</h1>
     <p class="hero-subtitle">7 дней самоисследования через МАК&#8209;карты</p>
-    <p class="hero-dates" id="heroDate">15 — 21 июля 2026 · ежедневно в 18:00 МСК</p>
+    <p class="hero-dates" id="heroDate">Ближайший старт — на новолуние · ежедневно в 18:00 МСК</p>
   </div>
   <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
     <a href="https://t.me/finlabo_bot" class="btn-primary">Telegram → @finlabo_bot</a>
@@ -1193,7 +1193,7 @@
 <section class="cta-bottom">
   <div class="container">
     <h2>Семь вопросов, которые ты себе ещё не задавала.</h2>
-    <p>Живой поток — 15–21 июля. Живые эфиры, живая группа, живой контакт. Или в своём темпе — записи всегда доступны.</p>
+    <p>Живой поток — старт на каждое новолуние. Живые эфиры, живая группа, живой контакт. Или в своём темпе — записи всегда доступны.</p>
     <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
       <a href="https://t.me/finlabo_bot" class="btn-primary" style="font-size:16px; padding:18px 40px;">Telegram → @finlabo_bot</a>
       <a href="https://vk.com/psychologist_olesyabreeze" class="btn-primary" style="font-size:16px; padding:18px 40px; background:linear-gradient(135deg, #0077B5, #00A8E8);">ВКонтакте → ФИНЛАБ</a>
@@ -1217,51 +1217,52 @@
 <script>
 // ─── Urgency bar + hero date countdown ───────────────────────────────────
 (function() {
-  const now   = new Date();
+  const FN = 'https://ogqtywdsplyqwfznqxnu.supabase.co/functions/v1/finlab-bot';
   const priceDeadline = new Date('2026-07-07T23:59:59+03:00'); // конец ранней цены
-  const courseStart   = new Date('2026-07-15T10:00:00+03:00'); // старт курса
-
   const msDay = 1000 * 60 * 60 * 24;
 
-  function daysLeft(target) {
+  function daysLeft(target, now) {
     const diff = target - now;
     return diff > 0 ? Math.ceil(diff / msDay) : 0;
   }
+  function plural(n) { return n === 1 ? 'день' : n < 5 ? 'дня' : 'дней'; }
 
-  // Urgency bar
-  const bar = document.getElementById('urgencyBar');
-  if (bar) {
-    const dPrice  = daysLeft(priceDeadline);
-    const dStart  = daysLeft(courseStart);
+  // Дата старта приходит из finlab-bot?next_live (ближайшее новолуние).
+  // Фолбэк на случай недоступности эндпоинта — нейтральный текст без даты.
+  function render(human, iso) {
+    const now = new Date();
+    const courseStart = iso ? new Date(iso + 'T18:00:00+03:00') : null;
+    const startLabel = human || 'на новолуние';
 
-    if (dPrice > 0) {
-      // до повышения цены
-      const plural = dPrice === 1 ? 'день' : dPrice < 5 ? 'дня' : 'дней';
-      bar.innerHTML = `Ранняя цена <strong>5 555 ₽</strong> действует ещё <span class="urgency-count">${dPrice} ${plural}</span> — до 7 июля включительно`;
-    } else if (dStart > 0) {
-      // цена уже выросла, курс ещё не начался
-      const plural = dStart === 1 ? 'день' : dStart < 5 ? 'дня' : 'дней';
-      bar.innerHTML = `До старта курса — <span class="urgency-count">${dStart} ${plural}</span> · 15 июля, 18:00 МСК`;
-    } else {
-      // курс идёт
-      bar.innerHTML = `Курс <strong>идёт прямо сейчас</strong> · 15–21 июля · следующий поток по запросу`;
+    const bar = document.getElementById('urgencyBar');
+    if (bar) {
+      const dPrice = daysLeft(priceDeadline, now);
+      const dStart = courseStart ? daysLeft(courseStart, now) : 0;
+      if (dPrice > 0) {
+        bar.innerHTML = `Ранняя цена <strong>5 555 ₽</strong> действует ещё <span class="urgency-count">${dPrice} ${plural(dPrice)}</span> — до 7 июля включительно`;
+      } else if (dStart > 0) {
+        bar.innerHTML = `До старта потока — <span class="urgency-count">${dStart} ${plural(dStart)}</span> · ближайший старт ${startLabel}, 18:00 МСК`;
+      } else {
+        bar.innerHTML = `Ближайший старт потока — <strong>${startLabel}</strong> · 18:00 МСК`;
+      }
+    }
+
+    const heroDate = document.getElementById('heroDate');
+    if (heroDate) {
+      const dStart = courseStart ? daysLeft(courseStart, now) : 0;
+      heroDate.textContent = dStart > 0
+        ? `Ближайший старт ${startLabel} · ежедневно в 18:00 МСК · до старта ${dStart} ${plural(dStart)}`
+        : `Ближайший старт ${startLabel} · ежедневно в 18:00 МСК`;
     }
   }
 
-  // Hero dates
-  const heroDate = document.getElementById('heroDate');
-  if (heroDate) {
-    const dStart = daysLeft(courseStart);
-    if (dStart > 0) {
-      const plural = dStart === 1 ? 'день' : dStart < 5 ? 'дня' : 'дней';
-      heroDate.textContent = `15 — 21 июля 2026 · до старта ${dStart} ${plural}`;
-    } else {
-      heroDate.textContent = `15 — 21 июля 2026 · идёт прямо сейчас`;
-    }
-  }
+  fetch(FN + '?next_live')
+    .then(r => r.json())
+    .then(d => render(d.human, d.date))
+    .catch(() => render('', ''));
 
   // Счётчик участников в потоке
-  fetch('https://ogqtywdsplyqwfznqxnu.supabase.co/functions/v1/finlab-bot?count=1')
+  fetch(FN + '?count=1')
     .then(r => r.json())
     .then(d => {
       const n = Number(d.count) || 0;

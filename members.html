@@ -308,11 +308,19 @@ function showContent(data) {
   const courseDay = data.course_day || 0;
   const myDay = data.current_day || 1;
 
-  document.getElementById("status-text").textContent = isEvergreen
-    ? `Твой прогресс: день ${myDay} из 7 · в своём темпе`
-    : courseDay > 0
-      ? `Идёт день ${courseDay} из 7 · Твой прогресс: день ${myDay}`
-      : `Курс начнётся 15 июля · Ты в списке участниц`;
+  const statusEl = document.getElementById("status-text");
+  if (isEvergreen) {
+    statusEl.textContent = `Твой прогресс: день ${myDay} из 7 · в своём темпе`;
+  } else if (courseDay > 0) {
+    statusEl.textContent = `Идёт день ${courseDay} из 7 · Твой прогресс: день ${myDay}`;
+  } else {
+    // Живой поток ещё не стартовал — дату берём из finlab-bot?next_live (новолуние)
+    statusEl.textContent = `Скоро старт · Ты в списке участниц`;
+    fetch("https://ogqtywdsplyqwfznqxnu.supabase.co/functions/v1/finlab-bot?next_live")
+      .then(r => r.json())
+      .then(d => { if (d.human) statusEl.textContent = `Старт ${d.human} · Ты в списке участниц`; })
+      .catch(() => {});
+  }
 
   // Счётчик участниц в потоке
   fetch("https://ogqtywdsplyqwfznqxnu.supabase.co/functions/v1/finlab-bot?count=1")
