@@ -304,13 +304,15 @@ function showContent(data) {
   document.getElementById("loader").style.display = "none";
   document.getElementById("content").style.display = "block";
 
+  const isEvergreen = data.track === "evergreen";
   const courseDay = data.course_day || 0;
   const myDay = data.current_day || 1;
 
-  document.getElementById("status-text").textContent =
-    courseDay > 0
+  document.getElementById("status-text").textContent = isEvergreen
+    ? `Твой прогресс: день ${myDay} из 7 · в своём темпе`
+    : courseDay > 0
       ? `Идёт день ${courseDay} из 7 · Твой прогресс: день ${myDay}`
-      : `Курс начнётся 15 июня · Ты в списке участниц`;
+      : `Курс начнётся 15 июля · Ты в списке участниц`;
 
   // Счётчик участниц в потоке
   fetch("https://ogqtywdsplyqwfznqxnu.supabase.co/functions/v1/finlab-bot?count=1")
@@ -333,11 +335,11 @@ function showContent(data) {
   list.innerHTML = "";
 
   for (const d of data.days) {
-    const isUnlocked = d.day <= courseDay;
+    const isUnlocked = isEvergreen || d.day <= courseDay;
     const card = buildDayCard(d, isUnlocked);
     list.appendChild(card);
     // Открываем текущий день
-    if (d.day === courseDay) card.classList.add("open");
+    if (d.day === (isEvergreen ? myDay : courseDay)) card.classList.add("open");
   }
 }
 
