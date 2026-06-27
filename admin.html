@@ -952,7 +952,7 @@
         }
       }
       const deleteBtn = activateId
-        ? `<button class="delete-btn" onclick="quickDelete('${activateId}', ${JSON.stringify(label)})">Удалить</button>`
+        ? `<button class="delete-btn" onclick='quickDelete(${JSON.stringify(String(activateId))}, ${JSON.stringify(label)})'>Удалить</button>`
         : '';
       return `<tr>
         <td>${channel}</td>
