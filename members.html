@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ФИНЛАБ — Материалы курса</title>
+  <title>ФИНЛАБ — Материалы</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="apple-touch-icon" href="favicon.svg" />
   <meta name="theme-color" content="#06110f" />
@@ -209,7 +209,7 @@
 <!-- Access denied -->
 <div id="denied">
   <h2>Доступ закрыт</h2>
-  <p id="denied-reason">Эта страница доступна только активным участницам курса.</p>
+  <p id="denied-reason">Эта страница доступна только участницам ФИНЛАБ.</p>
   <p>Есть вопросы? Напиши <a href="https://t.me/olesyabreeze">@olesyabreeze</a></p>
 </div>
 
@@ -217,7 +217,7 @@
 <div id="content">
   <header>
     <h1>ФИНЛАБ</h1>
-    <span class="badge">Материалы курса</span>
+    <span class="badge">Материалы ФИНЛАБ</span>
   </header>
   <main>
     <div class="status-bar">
@@ -368,7 +368,7 @@ function buildDayCard(d, isUnlocked) {
   body.className = "day-body";
 
   if (!isUnlocked) {
-    body.innerHTML = `<div class="section"><p class="locked">Откроется по расписанию курса.</p></div>`;
+    body.innerHTML = `<div class="section"><p class="locked">Откроется по расписанию потока.</p></div>`;
   } else {
     let html = "";
 
