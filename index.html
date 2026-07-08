@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ФИНЛАБ — 7 дней исследования финансовой цели через МАК-карты</title>
-  <meta name="description" content="Живая онлайн-лаборатория с Олесей Бриз. Новый поток на каждое новолуние. Исследуй свою финансовую цель через метафорические карты." />
+  <meta name="description" content="Живая онлайн-лаборатория с Олесей Бриз. Новый поток каждый месяц. Исследуй свою финансовую цель через метафорические карты." />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="apple-touch-icon" href="favicon.svg" />
   <meta name="theme-color" content="#06110f" />
@@ -848,7 +848,7 @@
     <canvas id="hero-canvas"></canvas>
     <h1>ФИНЛАБ</h1>
     <p class="hero-subtitle">7 дней самоисследования через МАК&#8209;карты</p>
-    <p class="hero-dates" id="heroDate">Ближайший старт — на новолуние · ежедневно в 18:00 МСК</p>
+    <p class="hero-dates" id="heroDate">Ближайший старт · ежедневно в 18:00 МСК</p>
   </div>
   <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
     <a href="https://t.me/finlabo_bot" class="btn-primary">Telegram → @finlabo_bot</a>
@@ -1193,7 +1193,7 @@
 <section class="cta-bottom">
   <div class="container">
     <h2>Семь вопросов, которые ты себе ещё не задавала.</h2>
-    <p>Живой поток — старт на каждое новолуние. Живые эфиры, живая группа, живой контакт. Или в своём темпе — записи всегда доступны.</p>
+    <p>Новый живой поток стартует каждый месяц. Живые эфиры, живая группа, живой контакт. Или в своём темпе — записи всегда доступны.</p>
     <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
       <a href="https://t.me/finlabo_bot" class="btn-primary" style="font-size:16px; padding:18px 40px;">Telegram → @finlabo_bot</a>
       <a href="https://vk.com/psychologist_olesyabreeze" class="btn-primary" style="font-size:16px; padding:18px 40px; background:linear-gradient(135deg, #0077B5, #00A8E8);">ВКонтакте → ФИНЛАБ</a>
@@ -1232,7 +1232,7 @@
   function render(human, iso) {
     const now = new Date();
     const courseStart = iso ? new Date(iso + 'T18:00:00+03:00') : null;
-    const startLabel = human || 'на новолуние';
+    const startLabel = human || '';
 
     const bar = document.getElementById('urgencyBar');
     if (bar) {
@@ -1242,13 +1242,15 @@
         bar.innerHTML = `Ранняя цена <strong>5 555 ₽</strong> действует ещё <span class="urgency-count">${dPrice} ${plural(dPrice)}</span> — до 7 июля включительно`;
       } else if (dStart > 0) {
         bar.innerHTML = `До старта потока — <span class="urgency-count">${dStart} ${plural(dStart)}</span> · ближайший старт ${startLabel}, 18:00 МСК`;
-      } else {
+      } else if (startLabel) {
         bar.innerHTML = `Ближайший старт потока — <strong>${startLabel}</strong> · 18:00 МСК`;
+      } else {
+        bar.innerHTML = `Живой поток · ежедневно в 18:00 МСК`;
       }
     }
 
     const heroDate = document.getElementById('heroDate');
-    if (heroDate) {
+    if (heroDate && startLabel) {
       const dStart = courseStart ? daysLeft(courseStart, now) : 0;
       heroDate.textContent = dStart > 0
         ? `Ближайший старт ${startLabel} · ежедневно в 18:00 МСК · до старта ${dStart} ${plural(dStart)}`
