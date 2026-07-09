@@ -1129,14 +1129,14 @@
     <p class="section-label">Участие</p>
     <h2>Стоимость</h2>
     <div class="pricing-cards">
-      <div class="price-card featured">
+      <div class="price-card featured" id="priceEarlyCard">
         <p class="price-tag">Ранняя цена</p>
         <div class="price-amount"><span class="price-currency">₽</span>5 555</div>
         <p class="price-condition">до 7 июля включительно</p>
         <a href="https://t.me/finlabo_bot" class="btn-primary" style="width:100%; text-align:center; display:block; font-size:13px; padding:12px 16px;">Telegram → @finlabo_bot</a>
         <a href="https://vk.com/psychologist_olesyabreeze" class="btn-primary" style="width:100%; text-align:center; display:block; margin-top:8px; font-size:13px; padding:12px 16px; background:linear-gradient(135deg, #0077B5, #00A8E8);">ВКонтакте → ФИНЛАБ</a>
       </div>
-      <div class="price-card">
+      <div class="price-card" id="priceMainCard">
         <p class="price-tag">Основная цена</p>
         <div class="price-amount"><span class="price-currency">₽</span>7 777</div>
         <p class="price-condition">с 8 июля</p>
@@ -1257,6 +1257,28 @@
         : `Ближайший старт ${startLabel} · ежедневно в 18:00 МСК`;
     }
   }
+
+  // Карточки цен: после дедлайна ранняя гаснет, подсветка переезжает на основную.
+  // Цены и даты в карточках статичные — скрипт только переключает состояние.
+  (function() {
+    if (new Date() <= priceDeadline) return;
+    const early = document.getElementById('priceEarlyCard');
+    const main = document.getElementById('priceMainCard');
+    if (early) {
+      early.classList.remove('featured');
+      early.style.opacity = '0.45';
+      const tag = early.querySelector('.price-tag');
+      if (tag) tag.textContent = 'Ранняя цена · завершена';
+      const cond = early.querySelector('.price-condition');
+      if (cond) cond.textContent = 'действовала до 7 июля';
+      early.querySelectorAll('a').forEach(a => { a.style.display = 'none'; });
+    }
+    if (main) {
+      main.classList.add('featured');
+      const cond = main.querySelector('.price-condition');
+      if (cond) cond.textContent = 'текущая цена потока';
+    }
+  })();
 
   fetch(FN + '?next_live')
     .then(r => r.json())
