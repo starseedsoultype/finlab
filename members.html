@@ -210,7 +210,7 @@
 <div id="denied">
   <h2>Доступ закрыт</h2>
   <p id="denied-reason">Эта страница доступна только участницам ФИНЛАБ.</p>
-  <p>Есть вопросы? Напиши <a href="https://t.me/olesyabreeze">@olesyabreeze</a></p>
+  <p>Есть вопросы? Напиши <a href="https://t.me/alexandra_source">@alexandra_source</a></p>
 </div>
 
 <!-- Content -->
@@ -280,8 +280,8 @@ async function loadContent(idInfo) {
     if (!data.access) {
       const reasons = {
         not_found: "Участница не найдена. Проверь ссылку в боте.",
-        dropped: "Твой доступ закрыт — время на домашнее задание истекло.\nЕсть вопросы? Напиши @olesyabreeze",
-        pending: "Оплата ещё не подтверждена. Если ты оплатила — напиши @olesyabreeze",
+        dropped: "Твой доступ закрыт — время на домашнее задание истекло.\nЕсть вопросы? Напиши @alexandra_source",
+        pending: "Оплата ещё не подтверждена. Если ты оплатила — напиши @alexandra_source",
       };
       showDenied(reasons[data.reason] || "Доступ закрыт.");
       return;
