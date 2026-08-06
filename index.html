@@ -1172,14 +1172,14 @@
       <div class="price-card featured" id="priceEarlyCard">
         <p class="price-tag">Ранняя цена</p>
         <div class="price-amount"><span class="price-currency">₽</span>5 555</div>
-        <p class="price-condition">до 7 июля включительно</p>
+        <p class="price-condition">ранняя цена потока</p>
         <a href="https://t.me/finlabo_bot" class="btn-primary" style="width:100%; text-align:center; display:block; font-size:13px; padding:12px 16px;">Telegram → @finlabo_bot</a>
         <a href="https://vk.ru/alexandra_source" class="btn-primary" style="width:100%; text-align:center; display:block; margin-top:8px; font-size:13px; padding:12px 16px; background:linear-gradient(135deg, #0077B5, #00A8E8);">ВКонтакте → ФИНЛАБ</a>
       </div>
       <div class="price-card" id="priceMainCard">
         <p class="price-tag">Основная цена</p>
         <div class="price-amount"><span class="price-currency">₽</span>7 777</div>
-        <p class="price-condition">с 8 июля</p>
+        <p class="price-condition">основная цена потока</p>
         <a href="https://t.me/finlabo_bot" class="btn-primary" style="width:100%; text-align:center; display:block; font-size:13px; padding:12px 16px;">Telegram → @finlabo_bot</a>
         <a href="https://vk.ru/alexandra_source" class="btn-primary" style="width:100%; text-align:center; display:block; margin-top:8px; font-size:13px; padding:12px 16px; background:linear-gradient(135deg, #0077B5, #00A8E8);">ВКонтакте → ФИНЛАБ</a>
       </div>
@@ -1258,7 +1258,6 @@
 // ─── Urgency bar + hero date countdown ───────────────────────────────────
 (function() {
   const FN = 'https://ogqtywdsplyqwfznqxnu.supabase.co/functions/v1/finlab-bot';
-  const priceDeadline = new Date('2026-07-07T23:59:59+03:00'); // конец ранней цены
   const msDay = 1000 * 60 * 60 * 24;
 
   function daysLeft(target, now) {
@@ -1267,19 +1266,26 @@
   }
   function plural(n) { return n === 1 ? 'день' : n < 5 ? 'дня' : 'дней'; }
 
-  // Дата старта приходит из finlab-bot?next_live (ближайшее новолуние).
-  // Фолбэк на случай недоступности эндпоинта — нейтральный текст без даты.
-  function render(human, iso) {
+  const MONTHS_RU = ['января','февраля','марта','апреля','мая','июня','июля',
+    'августа','сентября','октября','ноября','декабря'];
+  function humanDate(d) { return `${d.getDate()} ${MONTHS_RU[d.getMonth()]}`; }
+
+  // Дата старта и дедлайн ранней цены приходят из finlab-bot?next_live.
+  // Дедлайн считается от старта потока, руками его здесь задавать нечего.
+  // Фолбэк на случай недоступности эндпоинта — нейтральный текст без дат.
+  function render(data) {
     const now = new Date();
+    const iso = (data && data.date) || '';
     const courseStart = iso ? new Date(iso + 'T18:00:00+03:00') : null;
-    const startLabel = human || '';
+    const startLabel = (data && data.human) || '';
+    const priceDeadline = (data && data.early_deadline) ? new Date(data.early_deadline) : null;
 
     const bar = document.getElementById('urgencyBar');
     if (bar) {
-      const dPrice = daysLeft(priceDeadline, now);
+      const dPrice = priceDeadline ? daysLeft(priceDeadline, now) : 0;
       const dStart = courseStart ? daysLeft(courseStart, now) : 0;
       if (dPrice > 0) {
-        bar.innerHTML = `Ранняя цена <strong>5 555 ₽</strong> действует ещё <span class="urgency-count">${dPrice} ${plural(dPrice)}</span> — до 7 июля включительно`;
+        bar.innerHTML = `Ранняя цена <strong>5 555 ₽</strong> действует ещё <span class="urgency-count">${dPrice} ${plural(dPrice)}</span> — до ${humanDate(priceDeadline)} включительно`;
       } else if (dStart > 0) {
         bar.innerHTML = `До старта потока — <span class="urgency-count">${dStart} ${plural(dStart)}</span> · ближайший старт ${startLabel}, 18:00 МСК`;
       } else if (startLabel) {
@@ -1296,21 +1302,40 @@
         ? `Ближайший старт ${startLabel} · ежедневно в 18:00 МСК · до старта ${dStart} ${plural(dStart)}`
         : `Ближайший старт ${startLabel} · ежедневно в 18:00 МСК`;
     }
+
+    applyPriceCards(priceDeadline, now);
   }
 
-  // Карточки цен: после дедлайна ранняя гаснет, подсветка переезжает на основную.
-  // Цены и даты в карточках статичные — скрипт только переключает состояние.
-  (function() {
-    if (new Date() <= priceDeadline) return;
+  // Карточки цен: пока ранняя жива, обе карточки показывают свои даты от дедлайна.
+  // После дедлайна ранняя гаснет, подсветка переезжает на основную.
+  // Дедлайн неизвестен (эндпоинт молчит): ведём себя как после дедлайна, чтобы
+  // не обещать цену, которую нечем подтвердить.
+  function applyPriceCards(deadline, now) {
     const early = document.getElementById('priceEarlyCard');
     const main = document.getElementById('priceMainCard');
+    const active = !!deadline && now <= deadline;
+    const label = deadline ? humanDate(deadline) : '';
+    const nextDay = deadline ? humanDate(new Date(deadline.getTime() + msDay)) : '';
+
+    if (active) {
+      if (early) {
+        const cond = early.querySelector('.price-condition');
+        if (cond) cond.textContent = `до ${label} включительно`;
+      }
+      if (main) {
+        const cond = main.querySelector('.price-condition');
+        if (cond) cond.textContent = `с ${nextDay}`;
+      }
+      return;
+    }
+
     if (early) {
       early.classList.remove('featured');
       early.style.opacity = '0.45';
       const tag = early.querySelector('.price-tag');
       if (tag) tag.textContent = 'Ранняя цена · завершена';
       const cond = early.querySelector('.price-condition');
-      if (cond) cond.textContent = 'действовала до 7 июля';
+      if (cond) cond.textContent = label ? `действовала до ${label}` : 'завершена';
       early.querySelectorAll('a').forEach(a => { a.style.display = 'none'; });
     }
     if (main) {
@@ -1318,12 +1343,12 @@
       const cond = main.querySelector('.price-condition');
       if (cond) cond.textContent = 'текущая цена потока';
     }
-  })();
+  }
 
   fetch(FN + '?next_live')
     .then(r => r.json())
-    .then(d => render(d.human, d.date))
-    .catch(() => render('', ''));
+    .then(render)
+    .catch(() => render(null));
 
   // Счётчик участников в потоке
   fetch(FN + '?count=1')
